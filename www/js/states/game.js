@@ -8,8 +8,7 @@ GAME.Game.prototype = {
         this.cardsContainer = this.game.add.group();
         this.clickBlockerContainer = this.game.add.group();
 
-        this.players = [{'type':'human'}, {'type':'human'}];
-        this.currentPlayer = 0;
+        this.createPlayers();
 
         this.createMap();
 
@@ -21,7 +20,6 @@ GAME.Game.prototype = {
         this.clickBlocker.alpha = 0;
         this.clickBlocker.inputEnabled = true;
 
-
         this.turnStart();
     },
 
@@ -29,9 +27,7 @@ GAME.Game.prototype = {
     createCards: function() {
         for (let i=0; i<5; i++) {
             let card = new Card(this.game);
-            //card.anchor.set(0.5, 0.5);
-            /* @TODO: Fix the position */
-            card.configure('Dodo');
+            card.configure(this.players[0].cards[i]);
             card.x = i * (58);
             //card.x += card.width/2;
             card.setInteractive(true);
@@ -59,31 +55,37 @@ GAME.Game.prototype = {
         this.mapContainer.x = (this.game.width - this.mapContainer.width)/2;
         this.mapContainer.y = this.mapContainer.x;
     },
+    createPlayers: function() {
+        this.players = new Array();
+
+        let player = new Player("human");
+        player.addCard("Dodo");
+        player.addCard("Tonberry");
+        player.addCard("Dodo");
+        player.addCard("Dodo");
+        player.addCard("Dodo");
+        this.players.push(player);
+
+        let enemy = new Player("AI");
+        this.players.push(enemy);
+
+        this.currentPlayer = 0;
+    },
 
     resolveCombat: function(card, defender) {
         console.log("resolveCombat...");
-        let win = true;
 
-        if (defender.counter) {
-        }
-
-        if (win) {
-            let tween = this.game.add.tween(defender.tile.card.scale).to({x:0, y:1}, 300);
+        let tween = this.game.add.tween(defender.tile.card.scale).to({x:0, y:1}, 300);
+        tween.onComplete.add(function() {
+            defender.tile.card.setOwner(card.owner);
+            let tween = this.game.add.tween(defender.tile.card.scale).to({x:1, y:1}, 300);
             tween.onComplete.add(function() {
-                defender.tile.card.setOwner(card.owner);
-                let tween = this.game.add.tween(defender.tile.card.scale).to({x:1, y:1}, 300);
-                tween.onComplete.add(function() {
-                    this.turnCardPlaced(defender.tile.card);
-                }, this);
-                tween.start();
+                //@TODO: combo this.turnCardPlaced(defender.tile.card);
+                this.turnEnd();
             }, this);
             tween.start();
-        } else {
-            //card.setOwner(defender.tile.card.owner);
-            /* @TODO: Not sure it's safe, or it we SHOULD reparse when losing, should verify ... */
-            //this.turnCardPlaced(card);
-            console.log("LOST");
-        }
+        }, this);
+        tween.start();
     },
 
     turnStart: function() {

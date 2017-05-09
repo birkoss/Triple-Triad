@@ -1,6 +1,6 @@
 [
     {"name":"Dodo","sprite":"skeleton", "rarity":"Common","type":"None","stats":{"up":"4","right":"2","down":"3","left":"4"}},
-    {"name":"Tonberry","rarity":"Common","type":"None","stats":{"up":"2","right":"2","down":"7","left":"2"}},
+    {"name":"Tonberry","sprite":"peon","rarity":"Common","type":"None","stats":{"up":"2","right":"2","down":"7","left":"2"}},
     {"name":"Sabotender","rarity":"Common","type":"None","stats":{"up":"4","right":"3","down":"3","left":"3"}},
     {"name":"Spriggan","rarity":"Common","type":"None","stats":{"up":"2","right":"3","down":"4","left":"4"}},
     {"name":"Pudding","rarity":"Common","type":"None","stats":{"up":"2","right":"4","down":"3","left":"5"}},
