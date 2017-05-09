@@ -32,8 +32,8 @@ Card.prototype.configure = function(cardName) {
                 let unit = this.unitContainer.create(0, 0, "unit:" + singleCard.sprite);
                 unit.anchor.set(0.5, 0.5);
                 unit.scale.setTo(2, 2);
-                unit.x = this.backgroundContainer.width/2;
-                unit.y = this.backgroundContainer.height/2;
+                //unit.x = this.backgroundContainer.width/2;
+                //unit.y = this.backgroundContainer.height/2;
             }
 
             /* Update the stats from the card */
@@ -50,33 +50,31 @@ Card.prototype.setOwner = function(newOwner) {
 };
 
 Card.prototype.createCard = function() {
-    let background = this.backgroundContainer.create(3, 3, "tile:blank");
+    let background = this.backgroundContainer.create(0, 0, "tile:blank");
+    background.anchor.set(0.5, 0.5);
     let border = this.backgroundContainer.create(0, 0, "card:border");
+    border.anchor.set(0.5, 0.5);
     let frame = this.backgroundContainer.create(0, 0, "card:frame");
     frame.anchor.set(0.5, 0.5);
-    frame.x = (border.width/2);
-    frame.y = (border.height/2);
+    //frame.x = (border.width/2);
+    //frame.y = (border.height/2);
 
     this.stats = {};
     this.stats.left = this.game.add.bitmapText(0, 0, "font:gui", "1", 16);
     this.stats.left.anchor.set(0.5, 0.5);
-    this.stats.left.x = 12;
-    this.stats.left.y = border.height/2;
+    this.stats.left.x = -border.width/2 + 12;
     this.statsContainer.addChild(this.stats.left);
     this.stats.right = this.game.add.bitmapText(0, 0, "font:gui", "1", 16);
     this.stats.right.anchor.set(0.5, 0.5);
-    this.stats.right.x = border.width - 12;
-    this.stats.right.y = border.height/2;
+    this.stats.right.x = -border.width/2 + border.width - 12;
     this.statsContainer.addChild(this.stats.right);
     this.stats.down = this.game.add.bitmapText(0, 0, "font:gui", "1", 16);
     this.stats.down.anchor.set(0.5, 0);
-    this.stats.down.x = border.width/2;
-    this.stats.down.y = border.height - 7 - this.stats.down.height;
+    this.stats.down.y = -border.height/2 + border.height - 7 - this.stats.down.height;
     this.statsContainer.addChild(this.stats.down);
     this.stats.up = this.game.add.bitmapText(0, 0, "font:gui", "1", 16);
     this.stats.up.anchor.set(0.5, 0);
-    this.stats.up.x = border.width/2;
-    this.stats.up.y = 6;
+    this.stats.up.y = -border.height/2 + 6;
     this.statsContainer.addChild(this.stats.up);
 
     background.width = border.width - 6;

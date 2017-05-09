@@ -26,16 +26,6 @@ Map.prototype.createMap = function() {
             cell.card = null;
 
             this.backgroundContainer.addChild(cell);
-            /*
-            let block = this.createTile(gridX, gridY, "tile:grass");
-            block.frame = (gridY == 0 ? 0 : 1);
-            this.blocksContainer.addChild(block);
-
-            block.inputEnabled = true;
-            block.events.onInputDown.add(this.onBlockInputDown, this);
-            block.events.onInputOut.add(this.onBlockInputOut, this);
-            block.events.onInputUp.add(this.onBlockInputUp, this);
-            */
         }
     }
 };
@@ -61,25 +51,55 @@ Map.prototype.createTile = function(gridX, gridY, spriteName) {
 Map.prototype.getDefenders = function(card) {
     let defenders = new Array();
 
-    card.arrowsContainer.forEach(function(singleArrow) {
-        let x = card.tile.gridX + singleArrow.direction.x;
-        let y = card.tile.gridY + singleArrow.direction.y;
+    this.getNeighboorsAt(card.tile.gridX, card.tile.gridY).forEach(function(neighboor) {
+        let tile = this.getTileAt(neighboor.gridX, neighboor.gridY);
+        if (tile != null && tile.card != null && tile.card.owner != card.owner) {
+            let diffX = tile.gridX - card.tile.gridX;
+            let diffY = tile.gridY - card.tile.gridY;
 
-        if (x >= 0 && x < this.gridWidth && y >= 0 && y < this.gridHeight) {
-            let tile = this.getTileAt(x, y);
-            if (tile != null && tile.card != null && tile.card.owner != card.owner) {
-                let counter = false;
-                tile.card.arrowsContainer.forEach(function(singleDefenderArrow) {
-                    if (singleDefenderArrow.id == singleArrow.oppositeArrow) {
-                        counter = true;
-                    }
-                }, this);
-                defenders.push({tile:tile,counter:counter});
+            let attackingValue = defendingValue = 0;
+            if (diffX == -1) {
+                attackingValue = card.stats.left.text;
+                defendingValue = tile.card.stats.right.text;
+            } else if (diffX == 1) {
+                attackingValue = card.stats.right.text;
+                defendingValue = tile.card.stats.left.text;
+            } else if (diffY == -1) {
+                attackingValue = card.stats.up.text;
+                defendingValue = tile.card.stats.down.text;
+            } else if (diffY == 1) {
+                attackingValue = card.stats.down.text;
+                defendingValue = tile.card.stats.up.text;
+            }
+
+            if (attackingValue > defendingValue) {
+                defenders.push(tile.card);
             }
         }
     }, this);
 
     return defenders;
+};
+
+Map.prototype.getNeighboorsAt = function(gridX, gridY, onlyAdjacent, depth, excludeStartingPosition) {
+    if (depth == undefined) { depth = 1; }
+    if (onlyAdjacent == undefined) { onlyAdjacent = true; }
+    if (excludeStartingPosition == undefined) { excludeStartingPosition = true; }
+
+    let neighboors = new Array();
+    for (let y=-depth; y<=depth; y++) {
+        for (let x=-depth; x<=depth; x++) {
+            if ((x == 0 && y == 0) && excludeStartingPosition) { continue; }
+            if (onlyAdjacent && (x != 0 && y != 0)) { continue; }
+
+            let newX = gridX + x;
+            let newY = gridY + y;
+            if (newX >= 0 && newX < this.gridWidth && newY >= 0 && newY < this.gridHeight) {
+                neighboors.push({gridX:newX, gridY:newY});
+            }
+        }
+    }
+    return neighboors;
 };
 
 Map.prototype.getTileAt = function(gridX, gridY) {

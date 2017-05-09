@@ -29,9 +29,11 @@ GAME.Game.prototype = {
     createCards: function() {
         for (let i=0; i<5; i++) {
             let card = new Card(this.game);
+            //card.anchor.set(0.5, 0.5);
             /* @TODO: Fix the position */
             card.configure('Dodo');
             card.x = i * (58);
+            //card.x += card.width/2;
             card.setInteractive(true);
             card.setOwner(this.currentPlayer);
             card.onCardDragStart.add(this.onDragStart, this);
@@ -59,18 +61,28 @@ GAME.Game.prototype = {
     },
 
     resolveCombat: function(card, defender) {
+        console.log("resolveCombat...");
         let win = true;
 
         if (defender.counter) {
         }
 
         if (win) {
-            defender.tile.card.setOwner(card.owner);
-            this.turnCardPlaced(defender.tile.card);
+            let tween = this.game.add.tween(defender.tile.card.scale).to({x:0, y:1}, 300);
+            tween.onComplete.add(function() {
+                defender.tile.card.setOwner(card.owner);
+                let tween = this.game.add.tween(defender.tile.card.scale).to({x:1, y:1}, 300);
+                tween.onComplete.add(function() {
+                    this.turnCardPlaced(defender.tile.card);
+                }, this);
+                tween.start();
+            }, this);
+            tween.start();
         } else {
-            card.setOwner(defender.tile.card.owner);
+            //card.setOwner(defender.tile.card.owner);
             /* @TODO: Not sure it's safe, or it we SHOULD reparse when losing, should verify ... */
-            this.turnCardPlaced(card);
+            //this.turnCardPlaced(card);
+            console.log("LOST");
         }
     },
 
@@ -86,13 +98,15 @@ GAME.Game.prototype = {
         this.clickBlocker.inputEnabled = true;
 
         let defenders = this.map.getDefenders(card);
+        console.log("turnCardPlaced...");
+        console.log(defenders);
 
         if (defenders.length == 0) {
             this.turnEnd();
-        } else if (defenders.length == 1) {
-            this.resolveCombat(card, defenders[0]);
         } else {
-            console.log(defenders);
+            for (let i=0; i<defenders.length; i++) {
+                this.resolveCombat(card, defenders[i]);
+            }
         }
     },
     turnEnd: function() {
@@ -102,7 +116,6 @@ GAME.Game.prototype = {
     },
 
     onDragStart: function(card) {
-        console.log(card);
         this.cardsContainer.swap(card, this.cardsContainer.getChildAt(this.cardsContainer.children.length - 1));
     },
     onDragStop: function(card, pointer) {
@@ -120,7 +133,8 @@ GAME.Game.prototype = {
             tile.card = card;
             card.tile = tile;
             tile.addChild(card);
-            card.x = card.y = -3;
+            card.x = card.y = tile.width/2;
+
 
             this.turnCardPlaced(card);
         }
