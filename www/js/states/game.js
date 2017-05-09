@@ -67,6 +67,11 @@ GAME.Game.prototype = {
         this.players.push(player);
 
         let enemy = new Player("AI");
+        enemy.addCard("Dodo");
+        enemy.addCard("Tonberry");
+        enemy.addCard("Dodo");
+        enemy.addCard("Dodo");
+        enemy.addCard("Dodo");
         this.players.push(enemy);
 
         this.currentPlayer = 0;
@@ -88,12 +93,38 @@ GAME.Game.prototype = {
         tween.start();
     },
 
+    addCardToTile: function(card, tile) {
+        card.setOwner(this.currentPlayer);
+        tile.card = card;
+        card.tile = tile;
+        tile.addChild(card);
+        card.x = card.y = tile.width/2;
+
+        console.log(card.scale);
+        if (card.scale.x == 0) {
+            let tween = this.game.add.tween(card.scale).to({x:1, y:1}, 300);
+            tween.onComplete.add(function() {
+                this.turnCardPlaced(card);
+            }, this);
+            tween.start();
+        } else {
+            this.turnCardPlaced(card);
+        }
+    },
+
     turnStart: function() {
-        console.log(this.currentPlayer);
         if (this.players[this.currentPlayer].type == "human") {
             this.clickBlocker.inputEnabled = false;
         } else {
+            this.game.time.events.add(Phaser.Timer.SECOND * 0.5, function() {
+                let tile = this.players[this.currentPlayer].placeCard(this.map);
 
+                let card = new Card(this.game);
+                card.configure(this.players[this.currentPlayer].removeCard());
+
+                card.scale.set(0, 1);
+                this.addCardToTile(card, tile);
+            }, this);
         }
     },
     turnCardPlaced: function(card) {
@@ -112,9 +143,13 @@ GAME.Game.prototype = {
         }
     },
     turnEnd: function() {
-        this.currentPlayer ^= 1;
+        if (this.map.getTilesEmpty().length > 0) {
+            this.currentPlayer ^= 1;
 
-        this.turnStart();
+            this.turnStart();
+        } else {
+            console.log("@TODO: Pick the winner");
+        }
     },
 
     onDragStart: function(card) {
@@ -131,14 +166,7 @@ GAME.Game.prototype = {
         } else {
             card.setInteractive(false);
             /* @TODO Ugly hack, should be removed.... */
-            card.setOwner(this.currentPlayer);
-            tile.card = card;
-            card.tile = tile;
-            tile.addChild(card);
-            card.x = card.y = tile.width/2;
-
-
-            this.turnCardPlaced(card);
+            this.addCardToTile(card, tile);
         }
     }
 };

@@ -114,10 +114,16 @@ Map.prototype.getTileAt = function(gridX, gridY) {
     return wantedTile;
 };
 
-Map.prototype.getTileAtRandom = function() {
-    let tiles = this.getTilesEmpty();
+Map.prototype.getTilesEmpty = function() {
+    let tiles = new Array();
 
-    return tiles[Math.floor(Math.random() * (tiles.length-1))];
+    this.backgroundContainer.forEach(function(tile) {
+        if (tile.card == null) {
+            tiles.push(tile);
+        }
+    }, this);
+
+    return tiles;
 };
 
 Map.prototype.getTileAtWorldPosition = function(worldX, worldY) {
