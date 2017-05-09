@@ -81,6 +81,20 @@ Card.prototype.createCard = function() {
     background.height = border.height - 6;
 };
 
+Card.prototype.flip = function(callback) {
+    let tweenSpeed = 300;
+    let tweenScale = this.scale.x;
+    tweenScale ^= 1;
+
+    let tween = this.game.add.tween(this.scale).to({x:tweenScale}, tweenSpeed);
+    if (callback != null) {
+        tween.onComplete.add(function() {
+            callback();
+        }, this);
+    }
+    tween.start();
+};
+
 Card.prototype.setInteractive = function(state) {
     if (state) {
         this.originalX = this.x;

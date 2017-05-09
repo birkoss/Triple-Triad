@@ -80,17 +80,14 @@ GAME.Game.prototype = {
     resolveCombat: function(card, defender) {
         console.log("resolveCombat...");
 
-        let tween = this.game.add.tween(defender.tile.card.scale).to({x:0, y:1}, 300);
-        tween.onComplete.add(function() {
+        var self = this;
+        defender.tile.card.flip(function() {
             defender.tile.card.setOwner(card.owner);
-            let tween = this.game.add.tween(defender.tile.card.scale).to({x:1, y:1}, 300);
-            tween.onComplete.add(function() {
+            defender.tile.card.flip(function() {
                 //@TODO: combo this.turnCardPlaced(defender.tile.card);
-                this.turnEnd();
-            }, this);
-            tween.start();
-        }, this);
-        tween.start();
+                self.turnEnd();
+            });
+        });
     },
 
     addCardToTile: function(card, tile) {
@@ -102,11 +99,10 @@ GAME.Game.prototype = {
 
         console.log(card.scale);
         if (card.scale.x == 0) {
-            let tween = this.game.add.tween(card.scale).to({x:1, y:1}, 300);
-            tween.onComplete.add(function() {
-                this.turnCardPlaced(card);
-            }, this);
-            tween.start();
+            var self = this;
+            card.flip(function() {
+                self.turnCardPlaced(card);
+            });
         } else {
             this.turnCardPlaced(card);
         }
