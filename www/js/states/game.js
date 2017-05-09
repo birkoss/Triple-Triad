@@ -47,10 +47,9 @@ GAME.Game.prototype = {
         this.map = new Map(this.game, 3, 3);
 
         let background = this.mapContainer.create(0, 0, "tile:blank");
-        background.tint = 0xffffff;;
-        background.width = (this.map.gridWidth * 102) + 2;
-        background.height = (this.map.gridHeight * 102) + 2;
-
+        background.tint = 0x363636;
+        background.width = (this.map.gridWidth * 97) + 3;
+        background.height = (this.map.gridHeight * 97) + 3;
         this.mapContainer.addChild(this.map);
 
         this.map.x = (this.mapContainer.width - this.map.width)/2;
@@ -121,7 +120,7 @@ GAME.Game.prototype = {
             tile.card = card;
             card.tile = tile;
             tile.addChild(card);
-            card.x = card.y = 0;
+            card.x = card.y = -3;
 
             this.turnCardPlaced(card);
         }

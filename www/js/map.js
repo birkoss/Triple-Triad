@@ -16,9 +16,9 @@ Map.prototype.constructor = Map;
 Map.prototype.createMap = function() {
     for (let gridY=0; gridY<this.gridHeight; gridY++) {
         for (let gridX=0; gridX<this.gridWidth; gridX++) {
-            let cell = this.game.add.tileSprite(0, 0, 100, 100, 'map:grass');
-            cell.x = gridX * (cell.width+2);
-            cell.y = gridY * (cell.height+2);
+            let cell = this.game.add.tileSprite(0, 0, 94, 94, 'map:grass');
+            cell.x = gridX * (cell.width+3);
+            cell.y = gridY * (cell.height+3);
 
             cell.gridX = gridX;
             cell.gridY = gridY;
