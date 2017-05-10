@@ -154,7 +154,8 @@ GAME.Game.prototype = {
 
             this.turnStart();
         } else {
-            console.log("@TODO: Pick the winner");
+            let winner = this.map.getWinner();
+            console.log("@TODO: Winner: " + winner);
         }
     },
 

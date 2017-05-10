@@ -141,3 +141,12 @@ Map.prototype.getTileAtWorldPosition = function(worldX, worldY) {
 
     return tile;
 };
+
+Map.prototype.getWinner = function() {
+    let totalTiles = [0, 0];
+    this.backgroundContainer.forEach(function(singleTile) {
+        totalTiles[singleTile.card.owner]++;
+    }, this);
+    console.log(totalTiles);
+    return (totalTiles[0] > totalTiles[1] ? 0 : 1);
+};
