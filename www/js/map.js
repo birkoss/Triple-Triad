@@ -142,11 +142,21 @@ Map.prototype.getTileAtWorldPosition = function(worldX, worldY) {
     return tile;
 };
 
+/* Get all NEW cards owned by toOwner */
+Map.prototype.getCardsTradable = function(toOwner) {
+    let cards = new Array();
+    this.backgroundContainer.forEach(function(singleTile) {
+        if (singleTile.card.owner == toOwner && singleTile.card.owner.firstOwner != toOwner) {
+            cards[] = singleTile.card;
+        }
+    }, this);
+    return cards;
+};
+
 Map.prototype.getWinner = function() {
     let totalTiles = [0, 0];
     this.backgroundContainer.forEach(function(singleTile) {
         totalTiles[singleTile.card.owner]++;
     }, this);
-    console.log(totalTiles);
     return (totalTiles[0] > totalTiles[1] ? 0 : 1);
 };
