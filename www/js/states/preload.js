@@ -18,6 +18,9 @@ GAME.Preload.prototype = {
         this.load.spritesheet('unit:dwarf', 'images/tiles/units/dwarf.png', 16, 16);
         this.load.spritesheet('unit:farmer', 'images/tiles/units/farmer.png', 16, 16);
         this.load.spritesheet('unit:priest', 'images/tiles/units/priest.png', 16, 16);
+        this.load.spritesheet('unit:crocodile', 'images/tiles/units/crocodile.png', 16, 16);
+        this.load.spritesheet('unit:rat', 'images/tiles/units/rat.png', 16, 16);
+        this.load.spritesheet('unit:small-demon', 'images/tiles/units/small-demon.png', 16, 16);
 
         this.load.image('map:grass', 'images/maps/grass.png');
 

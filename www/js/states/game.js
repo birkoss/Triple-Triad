@@ -69,13 +69,19 @@ GAME.Game.prototype = {
         }
         this.players.push(player);
 
-        let enemy = new Player("AI");
-        enemy.addCard("Farmer");
-        enemy.addCard("Archer");
-        enemy.addCard("Peon");
-        enemy.addCard("Dwarf");
-        enemy.addCard("Priest");
-        this.players.push(enemy);
+        /* Enemy */
+        let currentLevel = "level1";
+        GAME.json['enemies'].forEach(function(singleEnemy) {
+            if (singleEnemy.id == currentLevel) {
+                let cards = Phaser.ArrayUtils.shuffle(singleEnemy.decks.slice(0));
+                let enemy = new Player("AI");
+                for (let i=0; i<Math.min(player.cards.length, cards.length); i++) {
+                    enemy.addCard(cards[i]);
+                }
+                this.players.push(enemy);
+            }
+        }, this);
+
 
         this.currentPlayer = 0;
     },
