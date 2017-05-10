@@ -25,16 +25,20 @@ GAME.Game.prototype = {
 
     /* Misc methods */
     createCards: function() {
-        for (let i=0; i<5; i++) {
+        for (let i=0; i<this.players[0].cards.length; i++) {
             let card = new Card(this.game);
+            let cardSize = card.backgroundContainer.width;
             card.configure(this.players[0].cards[i]);
-            card.x = i * (58);
-            //card.x += card.width/2;
+            card.x = i * ((this.mapContainer.width-cardSize)/(this.players[0].cards.length-1));
+            card.x += cardSize/2;
+            card.y += cardSize/2;
             card.setInteractive(true);
             card.setOwner(this.currentPlayer);
             card.onCardDragStart.add(this.onDragStart, this);
             card.onCardDragStop.add(this.onDragStop, this);
             this.cardsContainer.addChild(card);
+            console.log(card.width + "x" + card.height);
+            console.log(card);
         }
 
         this.cardsContainer.y = (this.mapContainer.y*2) + this.mapContainer.height;
