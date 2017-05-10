@@ -30,10 +30,9 @@ Card.prototype.configure = function(cardName) {
         if (singleCard.name == cardName) {
             if (singleCard.sprite != null) {
                 let unit = this.unitContainer.create(0, 0, "unit:" + singleCard.sprite);
+                unit.animations.add("idle", [0, 1], 2, true);
                 unit.anchor.set(0.5, 0.5);
                 unit.scale.setTo(2, 2);
-                //unit.x = this.backgroundContainer.width/2;
-                //unit.y = this.backgroundContainer.height/2;
             }
 
             /* Update the stats from the card */
@@ -93,6 +92,10 @@ Card.prototype.flip = function(callback) {
         }, this);
     }
     tween.start();
+};
+
+Card.prototype.isPlaced = function() {
+    this.unitContainer.getChildAt(0).animations.play("idle");
 };
 
 Card.prototype.setInteractive = function(state) {

@@ -64,19 +64,19 @@ GAME.Game.prototype = {
         this.players = new Array();
 
         let player = new Player("human");
-        player.addCard("Dodo");
-        player.addCard("Tonberry");
-        player.addCard("Dodo");
-        player.addCard("Dodo");
-        player.addCard("Dodo");
+        player.addCard("Farmer");
+        player.addCard("Archer");
+        player.addCard("Peon");
+        player.addCard("Dwarf");
+        player.addCard("Priest");
         this.players.push(player);
 
         let enemy = new Player("AI");
-        enemy.addCard("Dodo");
-        enemy.addCard("Tonberry");
-        enemy.addCard("Dodo");
-        enemy.addCard("Dodo");
-        enemy.addCard("Dodo");
+        enemy.addCard("Farmer");
+        enemy.addCard("Archer");
+        enemy.addCard("Peon");
+        enemy.addCard("Dwarf");
+        enemy.addCard("Priest");
         this.players.push(enemy);
 
         this.currentPlayer = 0;
@@ -96,6 +96,7 @@ GAME.Game.prototype = {
     },
 
     addCardToTile: function(card, tile) {
+        card.isPlaced();
         card.setOwner(this.currentPlayer);
         tile.card = card;
         card.tile = tile;

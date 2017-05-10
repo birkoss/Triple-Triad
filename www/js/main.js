@@ -1,5 +1,6 @@
 /*
- * Animate the lava
+ * Animate the enemy on placed on the map
+ * Make the map as an island
  */
 var GAME = GAME || {};
 
