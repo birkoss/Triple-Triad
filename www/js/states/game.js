@@ -91,7 +91,7 @@ GAME.Game.prototype = {
 
         var self = this;
         defender.tile.card.flip(function() {
-            defender.tile.card.setOwner(card.owner);
+            defender.tile.card.changeOwner(card.owner);
             defender.tile.card.flip(function() {
                 //@TODO: combo this.turnCardPlaced(defender.tile.card);
                 self.turnEnd();

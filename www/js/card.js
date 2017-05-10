@@ -44,6 +44,11 @@ Card.prototype.configure = function(cardName) {
 };
 
 Card.prototype.setOwner = function(newOwner) {
+    this.firstOwner = newOwner;
+    this.changeOwner(newOwner);
+};
+
+Card.prototype.changeOwner = function(newOwner) {
     this.owner = newOwner;
     this.backgroundContainer.getChildAt(0).tint = (this.owner == 0 ? 0x597dcf : 0xd34549);
 };
