@@ -8,6 +8,13 @@ GAME.Game.prototype = {
         this.cardsContainer = this.game.add.group();
         this.clickBlockerContainer = this.game.add.group();
 
+        this.rules = {
+            "trade": "one",
+            "game": {
+                "open": false
+            }
+        };
+
         this.createPlayers();
 
         this.createMap();
@@ -73,16 +80,22 @@ GAME.Game.prototype = {
         let currentLevel = "level1";
         GAME.json['enemies'].forEach(function(singleEnemy) {
             if (singleEnemy.id == currentLevel) {
-                let cards = Phaser.ArrayUtils.shuffle(singleEnemy.decks.slice(0));
+                let cards = Phaser.ArrayUtils.shuffle(singleEnemy.cards.slice(0));
                 let enemy = new Player("AI");
                 for (let i=0; i<Math.min(player.cards.length, cards.length); i++) {
                     enemy.addCard(cards[i]);
                 }
                 this.players.push(enemy);
+
+                /* Apply the enemy rules */
+                this.rules.trade = singleEnemy.rules.trade;
+                for (let i=0; i<singleEnemy.rules.game.length; i++) {
+                    this.rules.game[singleEnemy.rules.game[i]] = true;
+                }
             }
         }, this);
 
-
+        /* @TODO: Pick a random player */
         this.currentPlayer = 0;
     },
 

@@ -147,7 +147,7 @@ Map.prototype.getCardsTradable = function(toOwner) {
     let cards = new Array();
     this.backgroundContainer.forEach(function(singleTile) {
         if (singleTile.card.owner == toOwner && singleTile.card.owner.firstOwner != toOwner) {
-            cards[] = singleTile.card;
+            cards.push(singleTile.card);
         }
     }, this);
     return cards;

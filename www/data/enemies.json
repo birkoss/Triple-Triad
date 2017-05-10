@@ -1,10 +1,10 @@
 [
     {
         "id":"level1",
-        "decks": ["Skeleton", "Crocodile", "Dwarf", "Small Demon", "Rat"],
+        "cards": ["Skeleton", "Crocodile", "Dwarf", "Small Demon", "Rat"],
         "rules": {
             "trade": "direct",
-            "play": ["open"]
+            "game": ["open"]
         }
     }
 ]
