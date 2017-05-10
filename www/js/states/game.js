@@ -64,11 +64,9 @@ GAME.Game.prototype = {
         this.players = new Array();
 
         let player = new Player("human");
-        player.addCard("Farmer");
-        player.addCard("Archer");
-        player.addCard("Peon");
-        player.addCard("Dwarf");
-        player.addCard("Priest");
+        for (let i=0; i<GAME.config.deck.length; i++) {
+            player.addCard(GAME.config.deck[i]);
+        }
         this.players.push(player);
 
         let enemy = new Player("AI");

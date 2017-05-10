@@ -5,13 +5,14 @@
 var GAME = GAME || {};
 
 GAME.config = {};
-GAME.config.coins = 0;
+GAME.config.cards = {"Farmer":1, "Peon":1, "Dwarf":1, "Archer":1, "Priest":1};
+GAME.config.deck = ["Farmer", "Peon", "Dwarf", "Archer", "Priest"];
 
 GAME.scale = {sprite:6, normal:1};
 GAME.scale.normal = Math.max(1, Math.min(6, Math.floor(window.innerWidth / 320) * 2));
 
 GAME.save = function() {
-    let fields = ['coins'];
+    let fields = ["decks"];
 
     let data = {};
     fields.forEach(function(field) {

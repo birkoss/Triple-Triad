@@ -27,10 +27,12 @@ GAME.Preload.prototype = {
         this.load.bitmapFont('font:gui', 'fonts/gui.png', 'fonts/gui.xml');
 
         this.load.json('data:cards', 'data/cards.json');
+        this.load.json('data:enemies', 'data/enemies.json');
     },
     create: function() {
         GAME.json = {};
         GAME.json['cards'] = this.cache.getJSON('data:cards');
+        GAME.json['enemies'] = this.cache.getJSON('data:enemies');
 
         this.state.start('Game'); /* Game/Debug */
     }
