@@ -31,14 +31,15 @@ GAME.Game.prototype = {
             card.configure(this.players[0].cards[i]);
             card.x = i * ((this.mapContainer.width-cardSize)/(this.players[0].cards.length-1));
             card.x += cardSize/2;
+            if (i % 2 == 1) {
+                card.y += cardSize/2;
+            }
             card.y += cardSize/2;
             card.setInteractive(true);
             card.setOwner(this.currentPlayer);
             card.onCardDragStart.add(this.onDragStart, this);
             card.onCardDragStop.add(this.onDragStop, this);
             this.cardsContainer.addChild(card);
-            console.log(card.width + "x" + card.height);
-            console.log(card);
         }
 
         this.cardsContainer.y = (this.mapContainer.y*2) + this.mapContainer.height;
@@ -153,7 +154,7 @@ GAME.Game.prototype = {
     },
 
     onDragStart: function(card) {
-        this.cardsContainer.swap(card, this.cardsContainer.getChildAt(this.cardsContainer.children.length - 1));
+        this.cardsContainer.bringToTop(card);
     },
     onDragStop: function(card, pointer) {
         let cursor = {x:pointer.worldX, y:pointer.worldY};
