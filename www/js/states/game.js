@@ -165,6 +165,14 @@ GAME.Game.prototype = {
             this.clickBlocker.inputEnabled = false;
         } else {
             this.game.time.events.add(Phaser.Timer.SECOND * 0.5, function() {
+                /*
+                 * @TODO: Generate an array for EACH remaining card, for each position, a note.
+                 *        - If the rule is OPEN, also use the remaining player's hand
+                 *
+                 * Example: Skeleton: 0x0=5, 1x0=10, etc...
+                 *
+                 */
+                
                 let tile = this.players[this.currentPlayer].placeCard(this.map);
 
                 let cardName = this.players[this.currentPlayer].removeCard();
@@ -178,9 +186,8 @@ GAME.Game.prototype = {
                     }, this);
 
                     card.scale.set(1, 1);
-                    console.log(tile);
-                    let newX = tile.width/2 + tile.worldPosition.x;// + card.width/2 + this.mapContainer.x;
-                    let newY = tile.height/2 + tile.worldPosition.y;;//worldPosition.y;
+                    let newX = tile.width/2 + tile.worldPosition.x;
+                    let newY = tile.height/2 + tile.worldPosition.y;
                     let tween = this.game.add.tween(card).to({x:newX, y:newY}, 300);
                     tween.onComplete.add(function() {
                         this.addCardToTile(card, tile);

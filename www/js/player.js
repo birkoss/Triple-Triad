@@ -9,15 +9,24 @@ Player.prototype = {
         this.cards.push(card);
     },
     placeCard: function(map) {
-        console.log(map);
         let emptyTiles = map.getTilesEmpty();
         let bestTile = null;
 
-        /*
-        map.getTilesEmpty().forEach(function(tile) {
-            
+        let cardsPerTiles = new Array();
+
+        this.cards.forEach(function(singleCard) {
+            let cardPerTiles = {cardName:singleCard, tiles:[]};
+
+            map.getTilesEmpty().forEach(function(singleTile) {
+                let value = 0;
+
+                cardPerTiles.tiles.push({gridX:singleTile.gridX, gridY:singleTile.gridY, value:value});
+            }, this);
+
+            cardsPerTiles.push(cardPerTiles);
         }, this);
-        */
+
+        console.log(cardsPerTiles);
 
         return emptyTiles[0];
     },
