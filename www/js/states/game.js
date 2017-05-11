@@ -99,7 +99,7 @@ GAME.Game.prototype = {
     createPlayers: function() {
         this.players = new Array();
 
-        let player = new Player("human");
+        let player = new Player(0, "human");
         for (let i=0; i<GAME.config.deck.length; i++) {
             player.addCard(GAME.config.deck[i]);
         }
@@ -110,7 +110,7 @@ GAME.Game.prototype = {
         GAME.json['enemies'].forEach(function(singleEnemy) {
             if (singleEnemy.id == currentLevel) {
                 let cards = Phaser.ArrayUtils.shuffle(singleEnemy.cards.slice(0));
-                let enemy = new Player("AI");
+                let enemy = new Player(1, "AI");
                 for (let i=0; i<Math.min(player.cards.length, cards.length); i++) {
                     enemy.addCard(cards[i]);
                 }

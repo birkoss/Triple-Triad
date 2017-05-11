@@ -1,11 +1,5 @@
 function Map(game, width, height) {
-    Phaser.Group.call(this, game);
-
-    this.gridWidth = width;
-    this.gridHeight = height;
-
-    this.backgroundContainer = this.game.add.group();
-    this.add(this.backgroundContainer);
+    Phaser.Group.call(this, game); this.gridWidth = width; this.gridHeight = height; this.backgroundContainer = this.game.add.group(); this.add(this.backgroundContainer);
 
     this.createMap();
 };
@@ -54,25 +48,7 @@ Map.prototype.getDefenders = function(card) {
     this.getNeighboorsAt(card.tile.gridX, card.tile.gridY).forEach(function(neighboor) {
         let tile = this.getTileAt(neighboor.gridX, neighboor.gridY);
         if (tile != null && tile.card != null && tile.card.owner != card.owner) {
-            let diffX = tile.gridX - card.tile.gridX;
-            let diffY = tile.gridY - card.tile.gridY;
-
-            let attackingValue = defendingValue = 0;
-            if (diffX == -1) {
-                attackingValue = card.stats.left.text;
-                defendingValue = tile.card.stats.right.text;
-            } else if (diffX == 1) {
-                attackingValue = card.stats.right.text;
-                defendingValue = tile.card.stats.left.text;
-            } else if (diffY == -1) {
-                attackingValue = card.stats.up.text;
-                defendingValue = tile.card.stats.down.text;
-            } else if (diffY == 1) {
-                attackingValue = card.stats.down.text;
-                defendingValue = tile.card.stats.up.text;
-            }
-
-            if (attackingValue > defendingValue) {
+            if (card.compare(tile.card) > 0) {
                 defenders.push(tile.card);
             }
         }
