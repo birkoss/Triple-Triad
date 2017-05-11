@@ -28,6 +28,7 @@ Card.prototype.update = function() {
 Card.prototype.configure = function(cardName) {
     GAME.json.cards.forEach(function(singleCard) {
         if (singleCard.name == cardName) {
+            this.cardName = cardName;
             if (singleCard.sprite != null) {
                 let unit = this.unitContainer.create(0, 0, "unit:" + singleCard.sprite);
                 unit.animations.add("idle", [0, 1], 2, true);
@@ -103,15 +104,20 @@ Card.prototype.isPlaced = function() {
     this.unitContainer.getChildAt(0).animations.play("idle");
 };
 
-Card.prototype.setInteractive = function(state) {
+Card.prototype.setInteractive = function(state, isDraggable) {
+    if (isDraggable == null) {
+        isDraggable = true;
+    }
     if (state) {
         this.originalX = this.x;
         this.originalY = this.y;
 
         this.inputEnabled = true;
-        this.input.enableDrag();
-        this.events.onDragStart.add(this.onDragStart, this);
-        this.events.onDragStop.add(this.onDragStop, this);
+        if (isDraggable) {
+            this.input.enableDrag();
+            this.events.onDragStart.add(this.onDragStart, this);
+            this.events.onDragStop.add(this.onDragStop, this);
+        }
     } else {
         this.inputEnabled = false;
     }

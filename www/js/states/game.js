@@ -5,6 +5,7 @@ GAME.Game = function() {};
 GAME.Game.prototype = {
     create: function() {
         this.mapContainer = this.game.add.group();
+        this.enemyCardsContainer = this.game.add.group();
         this.cardsContainer = this.game.add.group();
         this.clickBlockerContainer = this.game.add.group();
 
@@ -32,25 +33,53 @@ GAME.Game.prototype = {
 
     /* Misc methods */
     createCards: function() {
-        for (let i=0; i<this.players[0].cards.length; i++) {
-            let card = new Card(this.game);
-            let cardSize = card.backgroundContainer.width;
-            card.configure(this.players[0].cards[i]);
-            card.x = i * ((this.mapContainer.width-cardSize)/(this.players[0].cards.length-1));
-            card.x += cardSize/2;
-            if (i % 2 == 1) {
-                card.y += cardSize/2;
+        if (this.rules.game.open) {
+            for (let i=0; i<this.players[1].cards.length; i++) {
+                let card = this.createCard(this.players[1].cards[i], 1, i);
+                card.setInteractive(true);
+                card.events.onInputDown.add(this.onDragEnemyStart, this);
+                card.events.onInputUp.add(this.onDragEnemyStop, this);
+                this.enemyCardsContainer.addChild(card);
             }
-            card.y += cardSize/2;
+
+            this.enemyCardsContainer.x = this.mapContainer.x;
+            this.enemyCardsContainer.y = this.mapContainer.y;
+            this.mapContainer.y = (this.game.height - this.mapContainer.height) / 2;
+        }
+
+        for (let i=0; i<this.players[0].cards.length; i++) {
+            let card = this.createCard(this.players[0].cards[i], 0, i);
             card.setInteractive(true);
-            card.setOwner(this.currentPlayer);
             card.onCardDragStart.add(this.onDragStart, this);
             card.onCardDragStop.add(this.onDragStop, this);
             this.cardsContainer.addChild(card);
         }
 
         this.cardsContainer.y = (this.mapContainer.y*2) + this.mapContainer.height;
+        if (this.enemyCardsContainer.height > 0) {
+            this.cardsContainer.y = this.game.height - 50 - this.enemyCardsContainer.y;
+        }
         this.cardsContainer.x = this.mapContainer.x;
+    },
+    createCard: function(cardName, owner, index) {
+        let card = new Card(this.game);
+        let cardSize = card.backgroundContainer.width;
+        if (this.rules.game.open) {
+            cardSize /= 2;
+        }
+        card.configure(cardName);
+        card.x = index * ((this.mapContainer.width-cardSize)/(4));
+        card.x += cardSize/2;
+        if (this.rules.game.open) {
+            card.scale.set(0.5, 0.5);
+        }
+        if (index % 2 == 1 && !this.rules.game.open) {
+            card.y += cardSize/2;
+        }
+        card.y += cardSize/2;
+        card.setOwner(owner);
+
+        return card;
     },
 
     createMap: function() {
@@ -138,11 +167,31 @@ GAME.Game.prototype = {
             this.game.time.events.add(Phaser.Timer.SECOND * 0.5, function() {
                 let tile = this.players[this.currentPlayer].placeCard(this.map);
 
-                let card = new Card(this.game);
-                card.configure(this.players[this.currentPlayer].removeCard());
+                let cardName = this.players[this.currentPlayer].removeCard();
 
-                card.scale.set(0, 1);
-                this.addCardToTile(card, tile);
+                if (this.rules.game.open) {
+                    let card = null;
+                    this.enemyCardsContainer.forEach(function(singleCard) {
+                        if (singleCard.cardName == cardName) {
+                            card = singleCard;
+                        }
+                    }, this);
+
+                    card.scale.set(1, 1);
+                    console.log(tile);
+                    let newX = tile.width/2 + tile.worldPosition.x;// + card.width/2 + this.mapContainer.x;
+                    let newY = tile.height/2 + tile.worldPosition.y;;//worldPosition.y;
+                    let tween = this.game.add.tween(card).to({x:newX, y:newY}, 300);
+                    tween.onComplete.add(function() {
+                        this.addCardToTile(card, tile);
+                    }, this);
+                    tween.start();
+                } else {
+                    let card = new Card(this.game);
+                    card.configure(cardName);
+                    card.scale.set(0, 1);
+                    this.addCardToTile(card, tile);
+                }
             }, this);
         }
     },
@@ -175,7 +224,16 @@ GAME.Game.prototype = {
     },
 
     onDragStart: function(card) {
+        if (this.rules.game.open) {
+            card.scale.set(1, 1);
+        }
         this.cardsContainer.bringToTop(card);
+    },
+    onDragEnemyStart: function(card) {
+        if (this.rules.game.open) {
+            card.scale.set(1, 1);
+        }
+        this.enemyCardsContainer.bringToTop(card);
     },
     onDragStop: function(card, pointer) {
         let cursor = {x:pointer.worldX, y:pointer.worldY};
@@ -185,10 +243,21 @@ GAME.Game.prototype = {
             console.log("NOP: " + card.x + "x" + card.y + " from " + card.originalX + "x" + card.originalY);
             card.x = card.originalX;
             card.y = card.originalY;
+
+            if (this.rules.game.open) {
+                card.scale.set(0.5, 0.5);
+            }
         } else {
             card.setInteractive(false);
             /* @TODO Ugly hack, should be removed.... */
             this.addCardToTile(card, tile);
+        }
+    },
+    onDragEnemyStop: function(card, pointer) {
+        card.x = card.originalX;
+        card.y = card.originalY;
+        if (this.rules.game.open) {
+            card.scale.set(0.5, 0.5);
         }
     }
 };
