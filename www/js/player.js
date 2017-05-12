@@ -26,36 +26,45 @@ Player.prototype = {
 
         let cardsPerTiles = new Array();
 
+        let weakThreshold = 5;
+        let strongThreshold = 6;
+
         this.cards.forEach(function(singleCard) {
+            let card = GAME.getCard(singleCard);
             let cardPerTiles = {cardName:singleCard, tiles:[]};
 
             map.getTilesEmpty().forEach(function(singleTile) {
-                let surrounding = {
-                    '-1x0':false,
-                    '1x0':false,
-                    '0x-1':false,
-                    '0x1':false
-                };
                 let value = 0;
 
-                let neighboors = map.getNeighboorsAt(singleTile.gridX, singleTile.gridY);
-                neighboors.forEach(function(neighboor) {
-                    let diffX = neighboor.gridX - singleTile.gridX;
-                    let diffY = neighboor.gridY - singleTile.gridY;
+                let neighboors = [
+                    {gridX:singleTile.gridX-1, gridY:singleTile.gridY, stat:"left"},
+                    {gridX:singleTile.gridX+1, gridY:singleTile.gridY, stat:"right"},
+                    {gridX:singleTile.gridX, gridY:singleTile.gridY-1, stat:"up"},
+                    {gridX:singleTile.gridX, gridY:singleTile.gridY+1, stat:"down"}
+                ];
 
+                neighboors.forEach(function(neighboor) {
                     let tile = map.getTileAt(neighboor.gridX, neighboor.gridY);
-                    if (tile.card != null) {// && tile.card.owner != this.owner) {
-                        surrounding[diffX+"x"+diffY] = tile;
-                    } else if (tile.card == null) {
-                        surrounding[diffX+"x"+diffY] = true;
+                    
+                    /* Protecting a weak side on ourself (Best with the map limit) */
+                    if (card.stats[neighboor.stat] < weakThreshold) {
+                        if (tile == null) {
+                            value += 10;
+                        } else if (tile.card != null) {
+                            value += 5;
+                        }
                     }
+
+                    /* Protecting a good side on ourself */
+                    if (card.stats[neighboor.stat] > strongThreshold) {
+                        if (tile == null || tile.card == null) {
+                            value -= 10;
+                        }
+                    }
+
                 }, this);
 
-                /* Hiding a weak spot = +5 */
-                let weakThreshold = 5;
-
-                console.log(surrounding);
-
+                console.log("VALUE:" + value);
                 cardPerTiles.tiles.push({gridX:singleTile.gridX, gridY:singleTile.gridY, value:value});
             }, this);
 

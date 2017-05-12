@@ -111,8 +111,9 @@ GAME.Game.prototype = {
             if (singleEnemy.id == currentLevel) {
                 let cards = Phaser.ArrayUtils.shuffle(singleEnemy.cards.slice(0));
                 let enemy = new Player(1, "AI");
+                enemy.addCard('Skeleton');
                 for (let i=0; i<Math.min(player.cards.length, cards.length); i++) {
-                    enemy.addCard(cards[i]);
+                    //enemy.addCard(cards[i]);
                 }
                 this.players.push(enemy);
 

@@ -30,6 +30,16 @@ GAME.load = function() {
     }
 };
 
+GAME.getCard = function(cardName) {
+    let card = null;
+    GAME.json["cards"].forEach(function(singleCard) {
+        if (singleCard.name == cardName) {
+            card = singleCard;
+        }
+    }, this);
+    return card;
+};
+
 GAME.load();
 
 /* Phaser */

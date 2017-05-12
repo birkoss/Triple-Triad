@@ -23,22 +23,24 @@ Card.prototype = Object.create(Phaser.Sprite.prototype);
 Card.prototype.constructor = Card;
 
 Card.prototype.compare = function(otherCard) {
+    console.log("COMPARE");
+    console.log(otherCard);
     let diffX = otherCard.tile.gridX - this.tile.gridX;
     let diffY = otherCard.tile.gridY - this.tile.gridY;
 
     let attackingValue = defendingValue = 0;
     if (diffX == -1) {
         attackingValue = this.stats.left.text;
-        defendingValue = otherCard.card.stats.right.text;
+        defendingValue = otherCard.stats.right.text;
     } else if (diffX == 1) {
         attackingValue = this.stats.right.text;
-        defendingValue = otherCard.card.stats.left.text;
+        defendingValue = otherCard.stats.left.text;
     } else if (diffY == -1) {
         attackingValue = this.stats.up.text;
-        defendingValue = otherCard.card.stats.down.text;
+        defendingValue = otherCard.stats.down.text;
     } else if (diffY == 1) {
         attackingValue = this.stats.down.text;
-        defendingValue = otherCard.card.stats.up.text;
+        defendingValue = otherCard.stats.up.text;
     }
 
     if (attackingValue > defendingValue) {
