@@ -111,9 +111,8 @@ GAME.Game.prototype = {
             if (singleEnemy.id == currentLevel) {
                 let cards = Phaser.ArrayUtils.shuffle(singleEnemy.cards.slice(0));
                 let enemy = new Player(1, "AI");
-                enemy.addCard('Skeleton');
                 for (let i=0; i<Math.min(player.cards.length, cards.length); i++) {
-                    //enemy.addCard(cards[i]);
+                    enemy.addCard(cards[i]);
                 }
                 this.players.push(enemy);
 
@@ -166,18 +165,12 @@ GAME.Game.prototype = {
             this.clickBlocker.inputEnabled = false;
         } else {
             this.game.time.events.add(Phaser.Timer.SECOND * 0.5, function() {
-                /*
-                 * @TODO: Generate an array for EACH remaining card, for each position, a note.
-                 *        - If the rule is OPEN, also use the remaining player's hand
-                 *
-                 * Example: Skeleton: 0x0=5, 1x0=10, etc...
-                 *
-                 */
-                
-                let tile = this.players[this.currentPlayer].placeCard(this.map);
+                /* Get the best possible position to move */
+                let bestPosition = this.players[this.currentPlayer].placeCard(this.map);
+                let tile = bestPosition.tile;
+                let cardName = this.players[this.currentPlayer].removeCard(bestPosition.cardName);
 
-                let cardName = this.players[this.currentPlayer].removeCard();
-
+                /* If the game is OPEN, use the existing card instance of the enemy */
                 if (this.rules.game.open) {
                     let card = null;
                     this.enemyCardsContainer.forEach(function(singleCard) {
@@ -195,6 +188,7 @@ GAME.Game.prototype = {
                     }, this);
                     tween.start();
                 } else {
+                    /* If the game is not OPEN, create a new card instance */
                     let card = new Card(this.game);
                     card.configure(cardName);
                     card.scale.set(0, 1);
@@ -207,8 +201,6 @@ GAME.Game.prototype = {
         this.clickBlocker.inputEnabled = true;
 
         let defenders = this.map.getDefenders(card);
-        console.log("turnCardPlaced...");
-        console.log(defenders);
 
         if (defenders.length == 0) {
             this.turnEnd();
@@ -248,7 +240,6 @@ GAME.Game.prototype = {
 
         let tile = this.map.getTileAtWorldPosition(cursor.x, cursor.y);
         if (tile == null) {
-            console.log("NOP: " + card.x + "x" + card.y + " from " + card.originalX + "x" + card.originalY);
             card.x = card.originalX;
             card.y = card.originalY;
 
@@ -257,7 +248,6 @@ GAME.Game.prototype = {
             }
         } else {
             card.setInteractive(false);
-            /* @TODO Ugly hack, should be removed.... */
             this.addCardToTile(card, tile);
         }
     },

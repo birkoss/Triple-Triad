@@ -24,10 +24,11 @@ Player.prototype = {
         let emptyTiles = map.getTilesEmpty();
         let bestTile = null;
 
-        let cardsPerTiles = new Array();
+        let cardsValues = {};
 
         let weakThreshold = 5;
         let strongThreshold = 6;
+        let highestValue = 0;
 
         this.cards.forEach(function(singleCard) {
             let card = GAME.getCard(singleCard);
@@ -64,18 +65,26 @@ Player.prototype = {
 
                 }, this);
 
-                console.log("VALUE:" + value);
-                cardPerTiles.tiles.push({gridX:singleTile.gridX, gridY:singleTile.gridY, value:value});
+                if (cardsValues[value] == null) {
+                    cardsValues[value] = [];
+                }
+                cardsValues[value].push({cardName:singleCard, tile:singleTile});
+                if (value > highestValue) {
+                    highestValue = value;
+                }
             }, this);
-
-            cardsPerTiles.push(cardPerTiles);
         }, this);
 
-        console.log(cardsPerTiles);
+        console.log(cardsValues);
+        console.log(highestValue);
 
-        return emptyTiles[0];
+        return cardsValues[highestValue][map.game.rnd.integerInRange(0, cardsValues[highestValue].length-1)];
     },
-    removeCard: function() {
-        return this.cards.shift();
+    removeCard: function(cardName) {
+        if (cardName == null) {
+            return this.cards.shift();
+        } else {
+            return this.cards.splice(this.cards.indexOf(cardName), 1);
+        }
     }
 };
