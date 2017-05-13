@@ -22,6 +22,11 @@ GAME.Preload.prototype = {
         this.load.spritesheet('unit:rat', 'images/tiles/units/rat.png', 16, 16);
         this.load.spritesheet('unit:small-demon', 'images/tiles/units/small-demon.png', 16, 16);
 
+        this.load.spritesheet('ninepatch:background', 'images/gui/panel.png', 8, 8);
+        this.load.spritesheet('ninepatch:blue', 'images/gui/title.png', 8, 8);
+        this.load.spritesheet('gui:btnLevel', 'images/gui/buttons/level.png', 49, 49);
+        this.load.spritesheet('gui:btnLevelLocked', 'images/gui/buttons/level-locked.png', 49, 49);
+
         this.load.image('map:grass', 'images/maps/grass.png');
 
         this.load.image('tile:blank', 'images/tiles/blank.png');
@@ -37,6 +42,6 @@ GAME.Preload.prototype = {
         GAME.json['cards'] = this.cache.getJSON('data:cards');
         GAME.json['enemies'] = this.cache.getJSON('data:enemies');
 
-        this.state.start('Game'); /* Game/Debug */
+        this.state.start('Level'); /* Game/Debug */
     }
 };

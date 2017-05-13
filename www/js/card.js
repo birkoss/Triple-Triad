@@ -26,8 +26,6 @@ Card.prototype.compare = function(otherCard) {
     let diffX = otherCard.tile.gridX - this.tile.gridX;
     let diffY = otherCard.tile.gridY - this.tile.gridY;
 
-    console.log(diffX + "x" + diffY);
-
     let attackingValue = defendingValue = 0;
     if (diffX == -1) {
         attackingValue = this.stats.left.text;
@@ -43,7 +41,6 @@ Card.prototype.compare = function(otherCard) {
         defendingValue = otherCard.stats.up.text;
     }
 
-    console.log(attackingValue + " VS " + defendingValue);
     if (attackingValue > defendingValue) {
         return 1;
     } else if (attackingValue < defendingValue) {
