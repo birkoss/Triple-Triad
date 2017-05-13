@@ -26,6 +26,10 @@ GAME.Preload.prototype = {
         this.load.spritesheet('ninepatch:blue', 'images/gui/title.png', 8, 8);
         this.load.spritesheet('gui:btnLevel', 'images/gui/buttons/level.png', 49, 49);
         this.load.spritesheet('gui:btnLevelLocked', 'images/gui/buttons/level-locked.png', 49, 49);
+        this.load.image('gui:btnClose', 'images/gui/buttons/close.png');
+        this.load.image('icon:close', 'images/gui/buttons/closeIcon.png');
+        this.load.image('gui:btnChangePage', 'images/gui/buttons/changePage.png', 36, 36);
+        this.load.image('icon:changePage', 'images/gui/buttons/changePageIcon.png');
 
         this.load.image('map:grass', 'images/maps/grass.png');
 
