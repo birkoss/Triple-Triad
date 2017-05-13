@@ -30,6 +30,9 @@ Player.prototype = {
         let strongThreshold = 6;
         let highestValue = 0;
 
+        let cardObject = new Card(map.game);
+        cardObject.alpha = 0;
+
         this.cards.forEach(function(singleCard) {
             let card = GAME.getCard(singleCard);
             let cardPerTiles = {cardName:singleCard, tiles:[]};
@@ -63,6 +66,24 @@ Player.prototype = {
                         }
                     }
 
+                    /* Leaving a weak side open */
+                    if (card.stats[neighboor.stat] < weakThreshold) {
+                        if (tile != null && tile.card == null) {
+                            value -= 10;
+                        }
+                    }
+
+                    /* Can flip other cards */
+                    /* @TODO: Should check the difference (example: Flipping a 4 with a 5 is better than with a 7 */
+                    if (tile != null && tile.card != null && tile.card.owner != this.owner) {
+                        cardObject.tile = singleTile;
+                        cardObject.configure(singleCard);
+                        let result = cardObject.compare(tile.card);
+                        if (result > 0) {
+                            value += 25;
+                        }
+                    }
+
                 }, this);
 
                 if (cardsValues[value] == null) {
@@ -77,6 +98,8 @@ Player.prototype = {
 
         console.log(cardsValues);
         console.log(highestValue);
+
+        cardObject.destroy();
 
         return cardsValues[highestValue][map.game.rnd.integerInRange(0, cardsValues[highestValue].length-1)];
     },
