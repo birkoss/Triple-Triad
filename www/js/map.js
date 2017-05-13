@@ -1,5 +1,9 @@
 function Map(game, width, height) {
-    Phaser.Group.call(this, game); this.gridWidth = width; this.gridHeight = height; this.backgroundContainer = this.game.add.group(); this.add(this.backgroundContainer);
+    Phaser.Group.call(this, game);
+    this.gridWidth = width;
+    this.gridHeight = height; 
+    this.backgroundContainer = this.game.add.group(); 
+    this.add(this.backgroundContainer);
 
     this.createMap();
 };
