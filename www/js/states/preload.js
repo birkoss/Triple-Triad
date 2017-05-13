@@ -30,6 +30,7 @@ GAME.Preload.prototype = {
         this.load.image('icon:close', 'images/gui/buttons/closeIcon.png');
         this.load.image('gui:btnChangePage', 'images/gui/buttons/changePage.png', 36, 36);
         this.load.image('icon:changePage', 'images/gui/buttons/changePageIcon.png');
+        this.load.spritesheet('gui:btnGreen', 'images/gui/buttons/green.png', 190, 49);
 
         this.load.image('map:grass', 'images/maps/grass.png');
 

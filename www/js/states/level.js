@@ -60,10 +60,21 @@ GAME.Level.prototype = {
 
         popup.createCloseButton();
 
+        let group = popup.getContainer("buttons").group;
+        let buttonPlay = this.game.add.button(0, 0, "gui:btnGreen", this.onBtnPlayClicked, this, 1, 0, 1, 0);
+        buttonPlay.level = button.level;
+        let textPlay = this.game.add.bitmapText(0, 0, "font:gui", "Play", 16);
+        textPlay.anchor.set(0.5, 0.5);
+        textPlay.x += buttonPlay.width/2;
+        textPlay.y += buttonPlay.height/2;
+        buttonPlay.addChild(textPlay);
+        group.addChild(buttonPlay);
+
         popup.generate();
 
         this.popupContainer.addChild(popup);
-
-
+    },
+    onBtnPlayClicked: function(button, pointer) {
+        this.state.start("Game");
     }
 };
