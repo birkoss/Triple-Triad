@@ -173,6 +173,7 @@ GAME.Game.prototype = {
                 let bestPosition = this.players[this.currentPlayer].placeCard(this.map);
                 let tile = bestPosition.tile;
                 let cardID = this.players[this.currentPlayer].removeCard(bestPosition.cardID);
+                console.log(cardID + " from the enemy");
 
                 /* If the game is OPEN, use the existing card instance of the enemy */
                 if (this.rules.game.open) {

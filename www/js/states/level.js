@@ -18,7 +18,6 @@ GAME.Level.prototype = {
         this.selector.generate();
 
         this.selectorContainer.addChild(this.selector);
-
     },
 
     createLevel() {
@@ -30,9 +29,10 @@ GAME.Level.prototype = {
             for (let x=0; x<3; x++) {
                 let isLocked = false;
                 let index = ((y * 3) + x) + (this.page * this.limit);
+                let levelID = "level" + (index+1);
 
                 if (index < GAME.json['levels'].length) {
-                    if (GAME.config.levels.indexOf("level" + (index+1)) == -1) {
+                    if (GAME.config.levels.indexOf(levelID) == -1) {
                         isLocked = true;
                     }
                     let button = this.game.add.button(0, 0, (isLocked ? 'gui:btnLevelLocked' : 'gui:btnLevel'), this.onLevelButtonClicked, this, 1, 0, 1, 0);
@@ -53,7 +53,7 @@ GAME.Level.prototype = {
                     label.x += button.width/2;
                     label.y += button.height/2 - 2;
                     button.addChild(label);
-                    button.level = index;
+                    button.levelID = levelID;
                 }
             }
         }
@@ -103,12 +103,12 @@ GAME.Level.prototype = {
         group.addChild(button);
     },
     onLevelButtonClicked: function(button, pointer) {
-        let levelID = "level1";
+        let levelID = button.levelID;
         let level = GAME.getLevel(levelID);
 
         let popup = new Popup(this.game);
         popup.createOverlay(0.5);
-        popup.createTitle("Level " + button.level);
+        popup.createTitle("Level " + levelID);
 
         popup.createCloseButton();
 
@@ -128,6 +128,7 @@ GAME.Level.prototype = {
             }
             c.x -= 6;
             c.configure(cardName);
+            c.isPlaced();
             //c.scale.setTo(0.5, 0.5);
             c.setOwner(1);
             c.preview();
