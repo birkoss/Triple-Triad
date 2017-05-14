@@ -35,7 +35,7 @@ Player.prototype = {
 
         this.cards.forEach(function(singleCard) {
             let card = GAME.getCard(singleCard);
-            let cardPerTiles = {cardName:singleCard, tiles:[]};
+            let cardPerTiles = {cardID:singleCard, tiles:[]};
 
             map.getTilesEmpty().forEach(function(singleTile) {
                 let value = 0;
@@ -89,7 +89,7 @@ Player.prototype = {
                 if (cardsValues[value] == null) {
                     cardsValues[value] = [];
                 }
-                cardsValues[value].push({cardName:singleCard, tile:singleTile});
+                cardsValues[value].push({cardID:singleCard, tile:singleTile});
                 if (value > highestValue) {
                     highestValue = value;
                 }
@@ -103,11 +103,11 @@ Player.prototype = {
 
         return cardsValues[highestValue][map.game.rnd.integerInRange(0, cardsValues[highestValue].length-1)];
     },
-    removeCard: function(cardName) {
-        if (cardName == null) {
+    removeCard: function(cardID) {
+        if (cardID == null) {
             return this.cards.shift();
         } else {
-            return this.cards.splice(this.cards.indexOf(cardName), 1);
+            return this.cards.splice(this.cards.indexOf(cardID), 1);
         }
     }
 };

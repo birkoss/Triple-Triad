@@ -5,8 +5,8 @@
 var GAME = GAME || {};
 
 GAME.config = {};
-GAME.config.cards = {"Farmer":1, "Peon":1, "Dwarf":1, "Archer":1, "Priest":1};
-GAME.config.deck = ["Farmer", "Peon", "Dwarf", "Archer", "Priest"];
+GAME.config.cards = {"card9":1, "card8":1, "card16":1, "card5":1, "card19":1};
+GAME.config.deck = ["card9", "card8", "card16", "card5", "card19"];
 
 GAME.scale = {sprite:6, normal:1};
 GAME.scale.normal = Math.max(1, Math.min(6, Math.floor(window.innerWidth / 320) * 2));
@@ -30,10 +30,10 @@ GAME.load = function() {
     }
 };
 
-GAME.getCard = function(cardName) {
+GAME.getCard = function(cardID) {
     let card = null;
     GAME.json["cards"].forEach(function(singleCard) {
-        if (singleCard.name == cardName) {
+        if (singleCard.id == cardID) {
             card = singleCard;
         }
     }, this);
@@ -42,7 +42,7 @@ GAME.getCard = function(cardName) {
 
 GAME.getLevel = function(levelID) {
     let level = null;
-    GAME.json["enemies"].forEach(function(singleLevel) {
+    GAME.json["levels"].forEach(function(singleLevel) {
         if (singleLevel.id == levelID) {
             level = singleLevel;
         }

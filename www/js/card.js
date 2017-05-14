@@ -50,23 +50,23 @@ Card.prototype.compare = function(otherCard) {
     return 0
 };
 
-Card.prototype.configure = function(cardName) {
-    GAME.json.cards.forEach(function(singleCard) {
-        if (singleCard.name == cardName) {
-            this.cardName = cardName;
-            if (singleCard.sprite != null) {
-                let unit = this.unitContainer.create(0, 0, "unit:" + singleCard.sprite);
-                unit.animations.add("idle", [0, 1], 2, true);
-                unit.anchor.set(0.5, 0.5);
-                unit.scale.setTo(2, 2);
-            }
+Card.prototype.configure = function(cardID) {
+    let card = GAME.getCard(cardID);
 
-            /* Update the stats from the card */
-            for (let stat in singleCard.stats) {
-                this.stats[stat].setText(singleCard.stats[stat]);
-            }
+    if (card != null) {
+        this.cardID = cardID;
+        if (card.sprite != null) {
+            let unit = this.unitContainer.create(0, 0, "unit:" + card.sprite);
+            unit.animations.add("idle", [0, 1], 2, true);
+            unit.anchor.set(0.5, 0.5);
+            unit.scale.setTo(2, 2);
         }
-    }, this);
+
+        /* Update the stats from the card */
+        for (let stat in card.stats) {
+            this.stats[stat].setText(card.stats[stat]);
+        }
+    }
 };
 
 Card.prototype.setOwner = function(newOwner) {

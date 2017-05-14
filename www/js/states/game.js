@@ -33,6 +33,7 @@ GAME.Game.prototype = {
 
     /* Misc methods */
     createCards: function() {
+        this.rules.game.open = true;
         if (this.rules.game.open) {
             for (let i=0; i<this.players[1].cards.length; i++) {
                 let card = this.createCard(this.players[1].cards[i], 1, i);
@@ -61,13 +62,13 @@ GAME.Game.prototype = {
         }
         this.cardsContainer.x = this.mapContainer.x;
     },
-    createCard: function(cardName, owner, index) {
+    createCard: function(cardID, owner, index) {
         let card = new Card(this.game);
         let cardSize = card.backgroundContainer.width;
         if (this.rules.game.open) {
             cardSize /= 2;
         }
-        card.configure(cardName);
+        card.configure(cardID);
         card.x = index * ((this.mapContainer.width-cardSize)/(4));
         card.x += cardSize/2;
         if (this.rules.game.open) {
@@ -107,9 +108,9 @@ GAME.Game.prototype = {
 
         /* Enemy */
         let currentLevel = "level1";
-        GAME.json['enemies'].forEach(function(singleEnemy) {
-            if (singleEnemy.id == currentLevel) {
-                let cards = Phaser.ArrayUtils.shuffle(singleEnemy.cards.slice(0));
+        GAME.json['levels'].forEach(function(singleLevel) {
+            if (singleLevel.id == currentLevel) {
+                let cards = Phaser.ArrayUtils.shuffle(singleLevel.cards.slice(0));
                 let enemy = new Player(1, "AI");
                 //enemy.addCard("Skeleton");
                 for (let i=0; i<Math.min(player.cards.length, cards.length); i++) {
@@ -118,9 +119,11 @@ GAME.Game.prototype = {
                 this.players.push(enemy);
 
                 /* Apply the enemy rules */
-                this.rules.trade = singleEnemy.rules.trade;
-                for (let i=0; i<singleEnemy.rules.game.length; i++) {
-                    this.rules.game[singleEnemy.rules.game[i]] = true;
+                if (singleLevel.rules != undefined ) {
+                    this.rules.trade = singleLevel.rules.trade;
+                    for (let i=0; i<singleLevel.rules.game.length; i++) {
+                        this.rules.game[singleLevel.rules.game[i]] = true;
+                    }
                 }
             }
         }, this);
@@ -169,13 +172,13 @@ GAME.Game.prototype = {
                 /* Get the best possible position to move */
                 let bestPosition = this.players[this.currentPlayer].placeCard(this.map);
                 let tile = bestPosition.tile;
-                let cardName = this.players[this.currentPlayer].removeCard(bestPosition.cardName);
+                let cardID = this.players[this.currentPlayer].removeCard(bestPosition.cardID);
 
                 /* If the game is OPEN, use the existing card instance of the enemy */
                 if (this.rules.game.open) {
                     let card = null;
                     this.enemyCardsContainer.forEach(function(singleCard) {
-                        if (singleCard.cardName == cardName) {
+                        if (singleCard.cardID == cardID) {
                             card = singleCard;
                         }
                     }, this);
@@ -191,7 +194,7 @@ GAME.Game.prototype = {
                 } else {
                     /* If the game is not OPEN, create a new card instance */
                     let card = new Card(this.game);
-                    card.configure(cardName);
+                    card.configure(cardID);
                     card.scale.set(0, 1);
                     this.addCardToTile(card, tile);
                 }
