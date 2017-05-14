@@ -140,7 +140,10 @@ GAME.Game.prototype = {
             defender.tile.card.changeOwner(card.owner);
             defender.tile.card.flip(function() {
                 //@TODO: combo this.turnCardPlaced(defender.tile.card);
-                self.turnEnd();
+                self.remainingDefenders--;
+                if (self.remainingDefenders <= 0) {
+                    self.turnEnd();
+                }
             });
         });
     },
@@ -174,6 +177,9 @@ GAME.Game.prototype = {
                 let tile = bestPosition.tile;
                 let cardID = this.players[this.currentPlayer].removeCard(bestPosition.cardID);
                 console.log(cardID + " from the enemy");
+                console.log(this.enemyCardsContainer);
+                console.log(this.players[1]);
+                console.log("------------------");
 
                 /* If the game is OPEN, use the existing card instance of the enemy */
                 if (this.rules.game.open) {
@@ -210,6 +216,8 @@ GAME.Game.prototype = {
         if (defenders.length == 0) {
             this.turnEnd();
         } else {
+            /* @TODO: Fix a bug where if MULTIPLE cards are turned, the turn ended is triggered after EACH cards */
+            this.remainingDefenders = defenders.length;
             for (let i=0; i<defenders.length; i++) {
                 this.resolveCombat(card, defenders[i]);
             }
@@ -223,6 +231,10 @@ GAME.Game.prototype = {
         } else {
             let winnerPlayer = this.map.getWinner();
             let cards = this.map.getCardsTradable(winnerPlayer);
+
+            let popup = new Popup(this.game);
+            popup.createTitle(winnerPlayer == 0 ? "You win" : "You lose");
+            popup.generate();
             console.log("@TODO: Winner: " + winnerPlayer);
             console.log(cards);
         }
