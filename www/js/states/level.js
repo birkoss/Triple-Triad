@@ -32,7 +32,7 @@ GAME.Level.prototype = {
                 let index = ((y * 3) + x) + (this.page * this.limit);
 
                 if (index < GAME.json['levels'].length) {
-                    if (index > 1) {
+                    if (GAME.config.levels.indexOf("level" + (index+1)) == -1) {
                         isLocked = true;
                     }
                     let button = this.game.add.button(0, 0, (isLocked ? 'gui:btnLevelLocked' : 'gui:btnLevel'), this.onLevelButtonClicked, this, 1, 0, 1, 0);

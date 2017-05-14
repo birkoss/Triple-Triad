@@ -7,12 +7,13 @@ var GAME = GAME || {};
 GAME.config = {};
 GAME.config.cards = {"card9":1, "card8":1, "card16":1, "card5":1, "card19":1};
 GAME.config.deck = ["card9", "card8", "card16", "card5", "card19"];
+GAME.config.levels = ["level1"];
 
 GAME.scale = {sprite:6, normal:1};
 GAME.scale.normal = Math.max(1, Math.min(6, Math.floor(window.innerWidth / 320) * 2));
 
 GAME.save = function() {
-    let fields = ["decks"];
+    let fields = ["decks", "cards", "levels"];
 
     let data = {};
     fields.forEach(function(field) {
