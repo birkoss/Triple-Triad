@@ -40,6 +40,16 @@ GAME.getCard = function(cardName) {
     return card;
 };
 
+GAME.getLevel = function(levelID) {
+    let level = null;
+    GAME.json["enemies"].forEach(function(singleLevel) {
+        if (singleLevel.id == levelID) {
+            level = singleLevel;
+        }
+    }, this);
+    return level;
+};
+
 GAME.load();
 
 /* Phaser */

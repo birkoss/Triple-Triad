@@ -105,8 +105,13 @@ Popup.prototype.generate = function() {
 
             if (singleContainer.paddingTop == undefined) {
                 containerY += this.padding;
+            } else if(singleContainer.paddingTop > 0) {
+                containerY += singleContainer.paddingTop;
             }
             singleContainer.group.y = containerY;
+            if (singleContainer.paddingBottom != undefined) {
+                containerY += singleContainer.paddingBottom;
+            }
 
             containerY += singleContainer.group.height;
         }

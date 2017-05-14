@@ -52,7 +52,8 @@ GAME.Level.prototype = {
         }
     },
     onLevelButtonClicked: function(button, pointer) {
-        console.log(button.level);
+        let levelID = "level1";
+        let level = GAME.getLevel(levelID);
 
         let popup = new Popup(this.game);
         popup.createOverlay(0.5);
@@ -60,9 +61,34 @@ GAME.Level.prototype = {
 
         popup.createCloseButton();
 
+        //popup.getContainer("cards").outside = true;
+        popup.getContainer("cards").paddingTop = 43;
+        popup.getContainer("cards").paddingBottom = 0;//12;
+        let cards = popup.getContainer("cards").group;
+        let cardIndex = 0;
+        level.cards.forEach(function(cardName) {
+            let cardY = Math.floor(cardIndex / 3);
+            let cardX = cardIndex - (cardY * 3);
+            let c = new Card(this.game);
+            c.x = cardX * (58 + 16);
+            c.y = cardY * (54 + 16);
+            if (cardY == 1) {
+                c.x += 36;
+            }
+            c.x -= 6;
+            c.configure(cardName);
+            //c.scale.setTo(0.5, 0.5);
+            c.setOwner(1);
+            c.preview();
+            cards.addChild(c);
+
+            cardIndex++;
+        }, this);
+        popup.getContainer("cards").x = ((this.game.width - cards.width) /2);
+
         let group = popup.getContainer("buttons").group;
         let buttonPlay = this.game.add.button(0, 0, "gui:btnGreen", this.onBtnPlayClicked, this, 1, 0, 1, 0);
-        buttonPlay.level = button.level;
+        buttonPlay.level = levelID;
         let textPlay = this.game.add.bitmapText(0, 0, "font:gui", "Play", 16);
         textPlay.anchor.set(0.5, 0.5);
         textPlay.x += buttonPlay.width/2;

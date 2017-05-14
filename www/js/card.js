@@ -148,6 +148,13 @@ Card.prototype.setInteractive = function(state, isDraggable) {
     }
 };
 
+Card.prototype.preview = function() {
+    this.backgroundContainer.getChildAt(0).alpha = 0;
+    this.backgroundContainer.getChildAt(1).alpha = 0;
+    this.arrowsContainer.alpha = 0;
+    this.statsContainer.alpha = 0;
+};
+
 /* Events */
 
 Card.prototype.onDragStart = function(tile, pointer) {
@@ -157,3 +164,4 @@ Card.prototype.onDragStart = function(tile, pointer) {
 Card.prototype.onDragStop = function(tile, pointer) {
     this.onCardDragStop.dispatch(this, pointer);
 };
+
