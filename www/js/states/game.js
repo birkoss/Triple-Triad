@@ -30,7 +30,7 @@ GAME.Game.prototype = {
 
         this.turnStart();
 
-        this.showEndPopup(0, ['card19', 'card8']);
+        this.showEndPopup(0, ['card19', 'card8', 'card10']);
     },
 
     /* Misc methods */
@@ -254,7 +254,6 @@ GAME.Game.prototype = {
 
         listViewBackground.resize(popup.maxWidth - (popup.padding*2), 150);
 
-
         cards.forEach(function(cardID) {
             let g = this.game.add.group()
             let sprite = g.create(0, 0, "tile:blank");
@@ -297,13 +296,14 @@ GAME.Game.prototype = {
                 GAME.config.levels.push(newLevel);
                 GAME.save();
             }
-            popup.addButton("Choose", this.onBtnRetryClicked, this, "gui:btnYellow");
+            popup.addButton("Choose", this.onBtnChooseCardClicked, this, "gui:btnYellow");
         } else {
             popup.addButton("Retry", this.onBtnRetryClicked, this, "gui:btnYellow");
         }
 
-
         popup.generate();
+
+        this.popup = popup;
     },
 
     onDragStart: function(card) {
@@ -344,15 +344,27 @@ GAME.Game.prototype = {
     onBtnRetryClicked: function(button, pointer) {
         this.state.restart();
     },
-    onBtnBackClicked: function(button, pointer) {
-        this.state.start("Level");
+    onBtnChooseCardClicked: function(button, pointer) {
+        let group = this.popup.getContainer("listView").group.getChildAt(1);
+
+        for (let i=0; i<group.children.length; i++) {
+            if (group.getChildAt(i).getChildAt(0).alpha > 0) {
+                let cardID = group.getChildAt(i).getChildAt(1).cardID;
+                if (GAME.config.cards[cardID] == undefined) {
+                    GAME.config.cards[cardID] = 0;
+                }
+
+                GAME.config.cards[cardID] ++;
+                GAME.save();
+            }
+        }
+        //this.state.start("Level");
     },
     onWinnerCardPicked: function(card, pointer) {
         let container = card.parent.parent;
         for (let i=0; i<container.children.length; i++) {
             container.children[i].getChildAt(0).alpha = 0;
         }
-        console.log(card);
         card.alpha = 0.5;
     }
 };
