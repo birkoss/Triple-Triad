@@ -140,7 +140,7 @@ GAME.Level.prototype = {
 
         let group = popup.getContainer("buttons").group;
         let buttonPlay = this.game.add.button(0, 0, "gui:btnGreen", this.onBtnPlayClicked, this, 1, 0, 1, 0);
-        buttonPlay.level = levelID;
+        buttonPlay.levelID = levelID;
         let textPlay = this.game.add.bitmapText(0, 0, "font:gui", "Play", 16);
         textPlay.anchor.set(0.5, 0.5);
         textPlay.x += buttonPlay.width/2;
@@ -153,6 +153,7 @@ GAME.Level.prototype = {
         this.popupContainer.addChild(popup);
     },
     onBtnPlayClicked: function(button, pointer) {
+        GAME.config.levelID = button.levelID;
         this.state.start("Game");
     },
     onBtnChangePageClicked: function(button, pointer) {

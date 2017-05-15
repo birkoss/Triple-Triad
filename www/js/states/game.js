@@ -107,7 +107,7 @@ GAME.Game.prototype = {
         this.players.push(player);
 
         /* Enemy */
-        let currentLevel = "level1";
+        let currentLevel = GAME.config.levelID;
         GAME.json['levels'].forEach(function(singleLevel) {
             if (singleLevel.id == currentLevel) {
                 let cards = Phaser.ArrayUtils.shuffle(singleLevel.cards.slice(0));
@@ -234,6 +234,22 @@ GAME.Game.prototype = {
 
             let popup = new Popup(this.game);
             popup.createTitle(winnerPlayer == 0 ? "You win" : "You lose");
+
+            if (winnerPlayer == 0) {
+                let levelNumber = parseInt(GAME.config.levelID.substr(5));
+                let newLevel = "level" + (levelNumber+1);
+
+                if (GAME.config.levels.indexOf(newLevel) == -1) {
+                    /* @TODO: Should show it in the popup! */
+                    GAME.config.levels.push(newLevel);
+                    GAME.save();
+                }
+            } else {
+                popup.addButton("Retry", this.onBtnRetryClicked, this, "gui:btnYellow");
+            }
+
+            popup.addButton("Go Back", this.onBtnBackClicked, this);
+
             popup.generate();
             console.log("@TODO: Winner: " + winnerPlayer);
             console.log(cards);
@@ -274,5 +290,11 @@ GAME.Game.prototype = {
         if (this.rules.game.open) {
             card.scale.set(0.5, 0.5);
         }
+    },
+    onBtnRetryClicked: function(button, pointer) {
+        this.state.restart();
+    },
+    onBtnBackClicked: function(button, pointer) {
+        this.state.start("Level");
     }
 };

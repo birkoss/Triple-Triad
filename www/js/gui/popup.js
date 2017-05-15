@@ -38,6 +38,20 @@ Popup.prototype.getContainer = function(containerName) {
     return container;
 };
 
+Popup.prototype.addButton = function(label, callback, context, sprite) {
+    if (sprite == undefined) {
+        sprite = "gui:btnGreen";
+    }
+    let group = this.getContainer("buttons").group;
+    let buttonPlay = this.game.add.button(0, group.height + (group.height > 0 ? this.padding : 0), sprite, callback, context, 1, 0, 1, 0);
+    let textPlay = this.game.add.bitmapText(0, 0, "font:gui", label, 16);
+    textPlay.anchor.set(0.5, 0.5);
+    textPlay.x += buttonPlay.width/2;
+    textPlay.y += buttonPlay.height/2;
+    buttonPlay.addChild(textPlay);
+    group.addChild(buttonPlay);
+};
+
 Popup.prototype.close = function() {
     this.hide();
 };
