@@ -29,6 +29,8 @@ GAME.Game.prototype = {
         this.clickBlocker.inputEnabled = true;
 
         this.turnStart();
+
+        this.showEndPopup(0, ['card19', 'card6']);
     },
 
     /* Misc methods */
@@ -231,29 +233,32 @@ GAME.Game.prototype = {
         } else {
             let winnerPlayer = this.map.getWinner();
             let cards = this.map.getCardsTradable(winnerPlayer);
-
-            let popup = new Popup(this.game);
-            popup.createTitle(winnerPlayer == 0 ? "You win" : "You lose");
-
-            if (winnerPlayer == 0) {
-                let levelNumber = parseInt(GAME.config.levelID.substr(5));
-                let newLevel = "level" + (levelNumber+1);
-
-                if (GAME.config.levels.indexOf(newLevel) == -1) {
-                    /* @TODO: Should show it in the popup! */
-                    GAME.config.levels.push(newLevel);
-                    GAME.save();
-                }
-            } else {
-                popup.addButton("Retry", this.onBtnRetryClicked, this, "gui:btnYellow");
-            }
-
-            popup.addButton("Go Back", this.onBtnBackClicked, this);
-
-            popup.generate();
+            this.showEndPopup(winnerPlayer, cards);
             console.log("@TODO: Winner: " + winnerPlayer);
             console.log(cards);
         }
+    },
+    showEndPopup: function(winnerID, cards) {
+        let popup = new Popup(this.game);
+        popup.createTitle(winnerID == 0 ? "You win" : "You lose");
+
+        if (winnerID == 0) {
+            let levelNumber = parseInt(GAME.config.levelID.substr(5));
+            let newLevel = "level" + (levelNumber+1);
+
+            if (GAME.config.levels.indexOf(newLevel) == -1) {
+                /* @TODO: Should show it in the popup! */
+                /* @TODO: Instead of unlocking, should save it (and change page if needed, and unlock it from the level selection state */
+                GAME.config.levels.push(newLevel);
+                GAME.save();
+            }
+        } else {
+            popup.addButton("Retry", this.onBtnRetryClicked, this, "gui:btnYellow");
+        }
+
+        popup.addButton("Go Back", this.onBtnBackClicked, this);
+
+        popup.generate();
     },
 
     onDragStart: function(card) {
