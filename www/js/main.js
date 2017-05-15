@@ -62,5 +62,6 @@ GAME.game.state.add('Preload', GAME.Preload);
 GAME.game.state.add('Main', GAME.Main);
 GAME.game.state.add('Game', GAME.Game);
 GAME.game.state.add('Level', GAME.Level);
+GAME.game.state.add('Debug', GAME.Debug);
 
 GAME.game.state.start('Boot');
