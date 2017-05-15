@@ -13,6 +13,9 @@ function Popup(game) {
     this.popupContainer.addChild(this.background);
 
     this.onPopupShown = new Phaser.Signal();
+
+    this.listView = null;
+    this.listViewItems = [];
 }
 
 Popup.prototype = Object.create(Phaser.Group.prototype);
@@ -147,10 +150,38 @@ Popup.prototype.generate = function() {
         group.y = - group.height/2;
     }
 
+    /* Create a listView if needed */
+    if (this.listViewItems.length > 0) {
+        let container = this.getContainer("listView").group;
+        let bounds = new Phaser.Rectangle(this.popupContainer.x + container.x + this.padding, this.popupContainer.y + container.y + this.padding, container.width - (this.padding*2), container.height - (this.padding*2));
+        let options = {
+            direction: 'y',
+            overflow: 100,
+            padding: 10,
+            searchForClicks: true
+        };
+        this.listView = new PhaserListView.ListView(this.game, this.world, bounds, options);
+
+        for (let i=0; i<this.listViewItems.length; i++) {
+            this.listView.add(this.listViewItems[i]);
+        }
+    }
+
     this.popupContainer.destinationY = -this.popupContainer.height;
     this.popupContainer.originalY = this.popupContainer.y;
 
     this.popupContainer.y = this.popupContainer.destinationY;
+    if (this.listView != null) {
+        let listViewDiff = Math.abs(this.popupContainer.destinationY) + Math.abs(this.popupContainer.originalY);
+
+        this.listView.originalGrpY = this.listView.grp.y;
+        this.listView.grp.y -= listViewDiff;
+        this.listView.destinationGrpY = this.listView.grp.y;
+
+        this.listView.originalY = this.listView.grp.mask.y;
+        this.listView.grp.mask.y -= listViewDiff;
+        this.listView.destinationY = this.listView.grp.mask.y;
+    }
 
     this.show();
 };
@@ -168,6 +199,10 @@ Popup.prototype.hide = function() {
 
 Popup.prototype.show = function() {
     let tween = this.game.add.tween(this.popupContainer).to({y:this.popupContainer.originalY}, Popup.SPEED);
+    if (this.listView != null) {
+        this.game.add.tween(this.listView.grp.mask).to({y:this.listView.originalY}, Popup.SPEED).start();
+        this.game.add.tween(this.listView.grp).to({y:this.listView.originalGrpY}, Popup.SPEED).start();
+    }
     tween.onComplete.add(function() {
         this.onPopupShown.dispatch(this);
     }, this);

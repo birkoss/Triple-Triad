@@ -120,6 +120,25 @@ GAME.Level.prototype = {
 
         listViewBackground.resize(popup.maxWidth - (popup.padding*2), 150);
 
+        let cardIndex = 0;
+        level.cards.forEach(function(cardName) {
+            let g = this.game.add.group()
+            let sprite = g.create(0, 0, "tile:blank");
+            sprite.width = 240;
+            sprite.height = 100;
+            sprite.alpha = 0.5;
+
+            let c = new Card(this.game);
+            c.configure(cardName);
+            c.setOwner(1);
+            c.x += 50;
+            c.y += 50;
+            g.addChild(c);
+
+            popup.listViewItems.push(g);
+
+            cardIndex++;
+        }, this);
 
         let group = popup.getContainer("buttons").group;
         let buttonPlay = this.game.add.button(0, 0, "gui:btnGreen", this.onBtnPlayClicked, this, 1, 0, 1, 0);
@@ -131,8 +150,8 @@ GAME.Level.prototype = {
         buttonPlay.addChild(textPlay);
         group.addChild(buttonPlay);
 
-        popup.onPopupShown.add(this.onPopupShown, this);
-        popup.levelID = levelID;
+        //popup.onPopupShown.add(this.onPopupShown, this);
+        //popup.levelID = levelID;
         popup.generate();
 
         this.popupContainer.addChild(popup);
@@ -141,6 +160,13 @@ GAME.Level.prototype = {
         let container = popup.getContainer("listView").group;
         let level = GAME.getLevel(popup.levelID);
         let bounds = new Phaser.Rectangle(popup.popupContainer.x + container.x + popup.padding, popup.popupContainer.y + container.y + popup.padding, container.width - (popup.padding*2), container.height - (popup.padding*2));
+        console.log(popup.listView);
+        popup.listView.bounds = bounds;
+        popup.listView.grp.x = bounds.x;
+        popup.listView.grp.y = bounds.y;
+        popup.listView.grp.mask.x = bounds.x;
+        popup.listView.grp.mask.y = bounds.y;
+        return;
         console.log(bounds);
         let options = {
             direction: 'y',
@@ -167,6 +193,7 @@ GAME.Level.prototype = {
             listView.add(g);
 
             cardIndex++;
+
         }, this);
     },
     onBtnPlayClicked: function(button, pointer) {
