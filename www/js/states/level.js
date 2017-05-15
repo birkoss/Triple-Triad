@@ -125,8 +125,7 @@ GAME.Level.prototype = {
         listViewBackground.resize(popup.maxWidth - (popup.padding*2), 150);
 
 
-        let cardIndex = 0;
-        level.cards.forEach(function(cardName) {
+        level.cards.forEach(function(cardID) {
             let g = this.game.add.group()
             let sprite = g.create(0, 0, "tile:blank");
             sprite.width = 240;
@@ -134,13 +133,13 @@ GAME.Level.prototype = {
             sprite.alpha = 0;
 
             let c = new Card(this.game);
-            c.configure(cardName);
+            c.configure(cardID);
             c.setOwner(1);
             c.x += 50;
             c.y += 50;
             g.addChild(c);
 
-            let qtyLabel = this.game.add.bitmapText(0, 0, "font:gui", "Qty:1", 16);
+            let qtyLabel = this.game.add.bitmapText(0, 0, "font:gui", "Qty:" + (GAME.config.cards[cardID] == null ? 0 : GAME.config.cards[cardID]), 16);
             qtyLabel.anchor.set(0, 0.5);
             qtyLabel.y = g.height/2;
             qtyLabel.x = ((100 - qtyLabel.width) / 2) + 105;
@@ -148,8 +147,6 @@ GAME.Level.prototype = {
             g.addChild(qtyLabel);
             
             popup.listViewItems.push(g);
-
-            cardIndex++;
         }, this);
 
         let group = popup.getContainer("buttons").group;

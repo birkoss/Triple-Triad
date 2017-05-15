@@ -30,7 +30,7 @@ GAME.Game.prototype = {
 
         this.turnStart();
 
-        this.showEndPopup(0, ['card19', 'card6']);
+        this.showEndPopup(0, ['card19', 'card8']);
     },
 
     /* Misc methods */
@@ -242,6 +242,51 @@ GAME.Game.prototype = {
         let popup = new Popup(this.game);
         popup.createTitle(winnerID == 0 ? "You win" : "You lose");
 
+        let description = popup.getContainer("description").group;
+        let descriptionText = this.game.add.bitmapText(0, 0, "font:gui", (winnerID == "0" ? "Choose a card to keep" : "This is the card the enemy kept"), 16);
+        descriptionText.tint = 0x959595;
+        descriptionText.maxWidth = popup.maxWidth - popup.padding;
+        description.addChild(descriptionText);
+
+        let listViewContainer = popup.getContainer("listView").group;
+        let listViewBackground = new Ninepatch(this.game, "ninepatch:blue");
+        listViewContainer.addChild(listViewBackground);
+
+        listViewBackground.resize(popup.maxWidth - (popup.padding*2), 150);
+
+
+        cards.forEach(function(cardID) {
+            let g = this.game.add.group()
+            let sprite = g.create(0, 0, "tile:blank");
+            sprite.width = 240;
+            sprite.height = 100;
+            sprite.alpha = 0;
+
+            let c = new Card(this.game);
+            c.configure(cardID);
+            c.setOwner(winnerID);
+            c.x += 50;
+            c.y += 50;
+            g.addChild(c);
+
+            let qtyLabel = this.game.add.bitmapText(0, 0, "font:gui", "Qty:" + (GAME.config.cards[cardID] == null ? 0 : GAME.config.cards[cardID]), 16);
+            qtyLabel.anchor.set(0, 0.5);
+            qtyLabel.y = g.height/2;
+            qtyLabel.x = ((100 - qtyLabel.width) / 2) + 105;
+            
+            g.addChild(qtyLabel);
+            
+            popup.listViewItems.push(g);
+        }, this);
+
+        if (winnerID == 0) {
+            popup.listViewItems[0].getChildAt(0).alpha = 0.5;
+            for (let i=0; i<popup.listViewItems.length; i++) {
+                popup.listViewItems[i].getChildAt(0).inputEnabled = true;
+                popup.listViewItems[i].getChildAt(0).events.onInputUp.add(this.onWinnerCardPicked, this);
+            }
+        }
+        
         if (winnerID == 0) {
             let levelNumber = parseInt(GAME.config.levelID.substr(5));
             let newLevel = "level" + (levelNumber+1);
@@ -252,11 +297,11 @@ GAME.Game.prototype = {
                 GAME.config.levels.push(newLevel);
                 GAME.save();
             }
+            popup.addButton("Choose", this.onBtnRetryClicked, this, "gui:btnYellow");
         } else {
             popup.addButton("Retry", this.onBtnRetryClicked, this, "gui:btnYellow");
         }
 
-        popup.addButton("Go Back", this.onBtnBackClicked, this);
 
         popup.generate();
     },
@@ -301,5 +346,13 @@ GAME.Game.prototype = {
     },
     onBtnBackClicked: function(button, pointer) {
         this.state.start("Level");
+    },
+    onWinnerCardPicked: function(card, pointer) {
+        let container = card.parent.parent;
+        for (let i=0; i<container.children.length; i++) {
+            container.children[i].getChildAt(0).alpha = 0;
+        }
+        console.log(card);
+        card.alpha = 0.5;
     }
 };
