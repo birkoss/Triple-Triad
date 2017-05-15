@@ -11,6 +11,8 @@ function Popup(game) {
 
     this.background = new Ninepatch(this.game, "ninepatch:background");
     this.popupContainer.addChild(this.background);
+
+    this.onPopupShown = new Phaser.Signal();
 }
 
 Popup.prototype = Object.create(Phaser.Group.prototype);
@@ -165,5 +167,9 @@ Popup.prototype.hide = function() {
 };
 
 Popup.prototype.show = function() {
-    this.game.add.tween(this.popupContainer).to({y:this.popupContainer.originalY}, Popup.SPEED).start();
+    let tween = this.game.add.tween(this.popupContainer).to({y:this.popupContainer.originalY}, Popup.SPEED);
+    tween.onComplete.add(function() {
+        this.onPopupShown.dispatch(this);
+    }, this);
+    tween.start();
 };

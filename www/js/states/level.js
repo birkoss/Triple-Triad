@@ -113,30 +113,13 @@ GAME.Level.prototype = {
         popup.createCloseButton();
 
         //popup.getContainer("cards").outside = true;
-        popup.getContainer("cards").paddingTop = 43;
-        popup.getContainer("cards").paddingBottom = 0;//12;
-        let cards = popup.getContainer("cards").group;
-        let cardIndex = 0;
-        level.cards.forEach(function(cardName) {
-            let cardY = Math.floor(cardIndex / 3);
-            let cardX = cardIndex - (cardY * 3);
-            let c = new Card(this.game);
-            c.x = cardX * (58 + 16);
-            c.y = cardY * (54 + 16);
-            if (cardY == 1) {
-                c.x += 36;
-            }
-            c.x -= 6;
-            c.configure(cardName);
-            c.isPlaced();
-            //c.scale.setTo(0.5, 0.5);
-            c.setOwner(1);
-            c.preview();
-            cards.addChild(c);
+        
+        let listViewContainer = popup.getContainer("listView").group;
+        let listViewBackground = new Ninepatch(this.game, "ninepatch:blue");
+        listViewContainer.addChild(listViewBackground);
 
-            cardIndex++;
-        }, this);
-        popup.getContainer("cards").x = ((this.game.width - cards.width) /2);
+        listViewBackground.resize(popup.maxWidth - (popup.padding*2), 150);
+
 
         let group = popup.getContainer("buttons").group;
         let buttonPlay = this.game.add.button(0, 0, "gui:btnGreen", this.onBtnPlayClicked, this, 1, 0, 1, 0);
@@ -148,9 +131,43 @@ GAME.Level.prototype = {
         buttonPlay.addChild(textPlay);
         group.addChild(buttonPlay);
 
+        popup.onPopupShown.add(this.onPopupShown, this);
+        popup.levelID = levelID;
         popup.generate();
 
         this.popupContainer.addChild(popup);
+    },
+    onPopupShown: function(popup) {
+        let container = popup.getContainer("listView").group;
+        let level = GAME.getLevel(popup.levelID);
+        let bounds = new Phaser.Rectangle(popup.popupContainer.x + container.x + popup.padding, popup.popupContainer.y + container.y + popup.padding, container.width - (popup.padding*2), container.height - (popup.padding*2));
+        console.log(bounds);
+        let options = {
+            direction: 'y',
+            overflow: 100,
+            padding: 10,
+            searchForClicks: true
+        };
+        let listView = new PhaserListView.ListView(this.game, this.world, bounds, options);
+        let cardIndex = 0;
+        level.cards.forEach(function(cardName) {
+            let g = this.game.add.group()
+            let sprite = g.create(0, 0, "tile:blank");
+            sprite.width = 240;
+            sprite.height = 100;
+            sprite.alpha = 0.5;
+
+            let c = new Card(this.game);
+            c.configure(cardName);
+            c.setOwner(1);
+            c.x += 50;
+            c.y += 50;
+            g.addChild(c);
+
+            listView.add(g);
+
+            cardIndex++;
+        }, this);
     },
     onBtnPlayClicked: function(button, pointer) {
         GAME.config.levelID = button.levelID;

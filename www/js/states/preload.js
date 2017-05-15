@@ -48,6 +48,6 @@ GAME.Preload.prototype = {
         GAME.json['cards'] = this.cache.getJSON('data:cards');
         GAME.json['levels'] = this.cache.getJSON('data:levels');
 
-        this.state.start('Debug'); /* Game/Debug */
+        this.state.start('Level'); /* Game/Debug */
     }
 };
