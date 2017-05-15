@@ -20,7 +20,6 @@ GAME.Debug.prototype = {
             sprite.width = 150;
             sprite.height = 80;
             sprite.inputEnabled = true;
-            sprite.events.onInputDown.add(function() { console.log("DOWN"); }, this);
             sprite.events.onInputUp.add(function() { console.log("UP"); }, this);
             items.push(items);
             listView.add(sprite);
