@@ -33,6 +33,7 @@ GAME.Preload.prototype = {
         this.load.spritesheet('gui:btnGreen', 'images/gui/buttons/green.png', 190, 49);
         this.load.spritesheet('gui:btnYellow', 'images/gui/buttons/yellow.png', 190, 49);
         this.load.image('gui:btnGrey', 'images/gui/buttons/grey.png');
+        this.load.spritesheet('gui:btnRed', 'images/gui/buttons/red.png', 190, 49);
 
         this.load.image('map:grass', 'images/maps/grass.png');
 
@@ -49,6 +50,6 @@ GAME.Preload.prototype = {
         GAME.json['cards'] = this.cache.getJSON('data:cards');
         GAME.json['levels'] = this.cache.getJSON('data:levels');
 
-        this.state.start('Debug'); /* Game/Debug */
+        this.state.start('Level'); /* Game/Debug */
     }
 };

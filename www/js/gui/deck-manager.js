@@ -9,6 +9,7 @@ DeckManager.prototype.constructor = DeckManager;
 
 DeckManager.prototype.selectCard = function(cardID) {
     let deckContainer = this.popup.getContainer("deck").group;
+    this.popup.createOverlay(0.8);
 
     /* Pick the first free position */
     let position = -1;

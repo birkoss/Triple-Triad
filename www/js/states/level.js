@@ -4,6 +4,7 @@ GAME.Level = function() {};
 
 GAME.Level.prototype = {
     create: function() {
+        this.panelContainer = this.game.add.group();
         this.selectorContainer = this.game.add.group();
         this.popupContainer = this.game.add.group();
 
@@ -18,6 +19,8 @@ GAME.Level.prototype = {
         this.selector.generate();
 
         this.selectorContainer.addChild(this.selector);
+
+        this.createPanel();
     },
 
     createLevel() {
@@ -102,6 +105,23 @@ GAME.Level.prototype = {
 
         group.addChild(button);
     },
+    createPanel: function() {
+        let background = new Ninepatch(this.game, 'ninepatch:background');
+        this.panelContainer.addChild(background);
+
+        let button = this.game.add.button(0, 16, "gui:btnRed", this.onChangeDeckClicked, this, 1, 0, 1, 0);
+        button.x = this.game.width - button.width/2 - 16;
+        this.panelContainer.addChild(button);
+
+        background.resize(this.game.width, button.height/2 + 32);
+
+        let label = this.game.add.bitmapText(0, 0, "font:gui", "Deck", 16);
+        label.anchor.set(0.5, 0.5);
+        label.x += button.width/2;
+        label.y += button.height/2 - 2;
+        button.addChild(label);
+        button.scale.setTo(0.5, 0.5);
+    },
     onLevelButtonClicked: function(button, pointer) {
         let levelID = button.levelID;
         let level = GAME.getLevel(levelID);
@@ -171,5 +191,9 @@ GAME.Level.prototype = {
         this.page += button.direction;
 
         this.createLevel();
+    },
+    onChangeDeckClicked: function() {
+        let manager = new DeckManager(this.game);
+        manager.generate();
     }
 };
