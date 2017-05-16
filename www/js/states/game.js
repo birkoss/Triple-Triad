@@ -217,7 +217,6 @@ GAME.Game.prototype = {
         if (defenders.length == 0) {
             this.turnEnd();
         } else {
-            /* @TODO: Fix a bug where if MULTIPLE cards are turned, the turn ended is triggered after EACH cards */
             this.remainingDefenders = defenders.length;
             for (let i=0; i<defenders.length; i++) {
                 this.resolveCombat(card, defenders[i]);
@@ -296,11 +295,20 @@ GAME.Game.prototype = {
             /* The enemy pick a card, and it's removed from your deck */
             if (GAME.config.cards[bestCard] != null) {
                 for (let i=0; i<popup.listViewItems.length; i++) {
-                    popup.listViewItems[i].getChildAt(0).alpha = 0.5;
+                    if (popup.listViewItems[i].getChildAt(1).cardID == bestCard) {
+                        popup.listViewItems[i].getChildAt(0).alpha = 0.5;
+                    }
                 }
                 let qty = GAME.config.cards[bestCard];
-                if (qty > 1 || GAME.config.starterDecl.indexOf(bestCard)) {
+                if (qty > 0 || !GAME.config.starterDeck.indexOf(bestCard)) {
                     GAME.config.cards[bestCard]--;
+                    /* If no more cards, remove it from the deck... */
+                    if (GAME.config.cards[bestCard] <= 0) {
+                        let cardInDeck = GAME.config.deck.indexOf(bestCard);
+                        if (cardInDeck >= 0) {
+                            GAME.config.deck.splice(cardInDeck, 1);
+                        }
+                    }
                     GAME.save();
                 }
             }
@@ -318,7 +326,9 @@ GAME.Game.prototype = {
             }
             popup.addButton("Choose", this.onBtnChooseCardClicked, this, "gui:btnYellow");
         } else {
+            /* @TODO: Verify that we have 5 cards in the deck */
             popup.addButton("Retry", this.onBtnRetryClicked, this, "gui:btnYellow");
+            popup.addButton("Back", this.onBtnBackClicked, this);
         }
 
         popup.generate();
@@ -386,5 +396,8 @@ GAME.Game.prototype = {
             container.children[i].getChildAt(0).alpha = 0;
         }
         card.alpha = 0.5;
+    },
+    onBtnBackClicked: function() {
+        this.state.start("Level");
     }
 };

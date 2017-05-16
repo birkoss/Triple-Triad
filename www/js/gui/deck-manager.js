@@ -70,7 +70,7 @@ DeckManager.prototype.generate = function() {
         for (let c=0; c<maxCols; c++) {
             let index = (i + c);
             if (index < GAME.json.cards.length) {
-                if (GAME.config.cards[GAME.json.cards[index].id] == null) {
+                if (GAME.config.cards[GAME.json.cards[index].id] == null || GAME.config.cards[GAME.json.cards[index].id] <= 0) {
                     let sprite = g.create(0, 0, "card:background");
                     sprite.width = 50;
                     sprite.alpha = 0.2;
