@@ -14,7 +14,7 @@ GAME.scale = {sprite:6, normal:1};
 GAME.scale.normal = Math.max(1, Math.min(6, Math.floor(window.innerWidth / 320) * 2));
 
 GAME.save = function() {
-    let fields = ["decks", "cards", "levels"];
+    let fields = ["deck", "cards", "levels"];
 
     let data = {};
     fields.forEach(function(field) {
@@ -28,6 +28,7 @@ GAME.load = function() {
     let data = localStorage.getItem('game_config');
     if (data != null) {
         data = JSON.parse(data);
+        console.log(data);
         GAME.config = Object.assign(GAME.config, data);
     }
 };

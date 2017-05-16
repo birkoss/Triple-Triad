@@ -128,8 +128,9 @@ GAME.Game.prototype = {
             }
         }, this);
 
-        /* @TODO: Pick a random player */
-        this.currentPlayer = 0;
+        /* Pick a random starting player */
+        /* @TODO: Show the starting player */
+        this.currentPlayer = this.game.rnd.between(0, 1);
     },
 
     resolveCombat: function(card, defender) {
@@ -293,13 +294,13 @@ GAME.Game.prototype = {
             }
         } else {
             /* The enemy pick a card, and it's removed from your deck */
-            if (GAME.config.cards.indexOf(cardID) >= 0) {
+            if (GAME.config.cards[bestCard] != null) {
                 for (let i=0; i<popup.listViewItems.length; i++) {
                     popup.listViewItems[i].getChildAt(0).alpha = 0.5;
                 }
-                let qty = GAME.config.cards[cardID];
-                if (qty > 1 || GAME.config.starterDecl.indexOf(cardID)) {
-                    GAME.config.cards[cardID]--;
+                let qty = GAME.config.cards[bestCard];
+                if (qty > 1 || GAME.config.starterDecl.indexOf(bestCard)) {
+                    GAME.config.cards[bestCard]--;
                     GAME.save();
                 }
             }

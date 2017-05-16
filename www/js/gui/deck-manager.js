@@ -78,7 +78,6 @@ DeckManager.prototype.generate = function() {
 
                     sprite.x += (c*55);
                 } else {
-                    console.log(GAME.json.cards[index].id);
                     let card = new Card(this.game);
                     card.configure(GAME.json.cards[index].id);
                     card.setOwner(0);
@@ -119,11 +118,9 @@ DeckManager.prototype.generate = function() {
 };
 
 DeckManager.prototype.highlight = function(cardID, state) {
-    console.log("highlight...");
     for (let i=0; i<this.popup.listViewItems.length; i++) {
         for (let j=1; j<this.popup.listViewItems[i].children.length; j++) {
             if (this.popup.listViewItems[i].getChildAt(j).cardID == cardID) {
-                console.log("...");
                 this.popup.listViewItems[i].getChildAt(j).alpha = (state ? 0.5 : 1);
             }
         }
