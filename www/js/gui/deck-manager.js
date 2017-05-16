@@ -63,7 +63,7 @@ DeckManager.prototype.generate = function() {
 
     let maxCols = 4;
 
-    for (let i=0; i<Math.ceil(GAME.json.cards.length/maxCols); i++) {
+    for (let i=0; i<GAME.json.cards.length; i+=maxCols) {
         let g = this.game.add.group();
 
         let sprite = g.create(0, 0, "tile:blank");
