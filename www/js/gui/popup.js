@@ -58,6 +58,8 @@ Popup.prototype.addButton = function(label, callback, context, sprite) {
     textPlay.y += buttonPlay.height/2;
     buttonPlay.addChild(textPlay);
     group.addChild(buttonPlay);
+
+	return buttonPlay;
 };
 
 Popup.prototype.close = function() {
@@ -200,8 +202,10 @@ Popup.prototype.generate = function() {
 };
 
 Popup.prototype.hide = function() {
-    this.overlayContainer.alpha = 0;
-    this.overlayContainer.getChildAt(0).inputEnabled = false;
+    if (this.overlayContainer.children.length > 0) {
+        this.overlayContainer.alpha = 0;
+        this.overlayContainer.getChildAt(0).inputEnabled = false;
+    }
 
     let tween = this.game.add.tween(this.popupContainer).to({y:this.popupContainer.destinationY}, Popup.SPEED);
     tween.onComplete.add(function() {
