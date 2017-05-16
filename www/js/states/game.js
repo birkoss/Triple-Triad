@@ -29,8 +29,6 @@ GAME.Game.prototype = {
         this.clickBlocker.inputEnabled = true;
 
         this.turnStart();
-
-        this.showEndPopup(0, ['card19', 'card8', 'card10']);
     },
 
     /* Misc methods */
@@ -254,7 +252,17 @@ GAME.Game.prototype = {
 
         listViewBackground.resize(popup.maxWidth - (popup.padding*2), 150);
 
+        let highestStrength = 0;
+        let bestCard = null;
         cards.forEach(function(cardID) {
+            let cardInfo = GAME.getCard(cardID);
+            /* Find the best card for the enemy to pick */
+            if (cardInfo.strength > highestStrength) {
+                bestCard = cardID;
+                highestStrength = cardInfo.strength;
+            }
+            
+            if (highestStrength 
             let g = this.game.add.group()
             let sprite = g.create(0, 0, "tile:blank");
             sprite.width = 240;
@@ -283,6 +291,15 @@ GAME.Game.prototype = {
             for (let i=0; i<popup.listViewItems.length; i++) {
                 popup.listViewItems[i].getChildAt(0).inputEnabled = true;
                 popup.listViewItems[i].getChildAt(0).events.onInputUp.add(this.onWinnerCardPicked, this);
+            }
+        } else {
+            /* The enemy pick a card, and it's removed from your deck */
+            if (GAME.config.cards.indexOf(cardID) >= 0) {
+                let qty = GAME.config.cards[cardID];
+                if (qty > 1 || GAME.config.starterDecl.indexOf(cardID)) {
+                    GAME.config.cards[cardID]--;
+                    GAME.save();
+                }
             }
         }
         
@@ -358,7 +375,7 @@ GAME.Game.prototype = {
                 GAME.save();
             }
         }
-        //this.state.start("Level");
+        this.state.start("Level");
     },
     onWinnerCardPicked: function(card, pointer) {
         let container = card.parent.parent;

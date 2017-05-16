@@ -126,8 +126,9 @@ Map.prototype.getTileAtWorldPosition = function(worldX, worldY) {
 Map.prototype.getCardsTradable = function(toOwner) {
     let cards = new Array();
     this.backgroundContainer.forEach(function(singleTile) {
-        if (singleTile.card.owner == toOwner && singleTile.card.owner.firstOwner != toOwner) {
-            cards.push(singleTile.card);
+        console.log (singleTile.card.firstOwner + " VS " + toOwner);
+        if (singleTile.card.owner == toOwner && singleTile.card.firstOwner != toOwner) {
+            cards.push(singleTile.card.cardID);
         }
     }, this);
     return cards;

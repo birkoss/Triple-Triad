@@ -5,8 +5,9 @@
 var GAME = GAME || {};
 
 GAME.config = {};
+GAME.config.starterDeck = ["card9", "card8", "card16", "card5", "card19"];
 GAME.config.cards = {"card9":1, "card8":1, "card16":1, "card5":1, "card19":1};
-GAME.config.deck = ["card9", "card8", "card16", "card5", "card19"];
+GAME.config.deck = GAME.config.starterDeck.splice(0);
 GAME.config.levels = ["level1"];
 
 GAME.scale = {sprite:6, normal:1};
