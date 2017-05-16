@@ -67,9 +67,13 @@ DeckManager.prototype.generate = function() {
         let g = this.game.add.group();
 
         let sprite = g.create(0, 0, "tile:blank");
+        sprite.col = i;
         sprite.width = 215;
         sprite.height = 50;
         sprite.alpha = 0;
+
+        sprite.inputEnabled = true;
+        sprite.events.onInputUp.add(this.onCardSelected, this);
 
         g.addChild(sprite);
 
@@ -84,9 +88,6 @@ DeckManager.prototype.generate = function() {
                 card.y += 25;
 
                 card.x += (c * 55);
-
-                card.inputEnabled = true;
-                card.events.onInputUp.add(this.onCardSelected, this);
 
                 g.addChild(card);
             }
@@ -104,8 +105,14 @@ DeckManager.prototype.removeFromDeck = function(card, pointer) {
     card.destroy();
 };
 
-DeckManager.prototype.onCardSelected = function(card, pointer) {
-    console.log("ONCARDSELECTED...");
-    console.log(card);
-    this.selectCard(card.cardID);
+DeckManager.prototype.onCardSelected = function(background, pointer) {
+    let index = (background.col * 4);
+    let container = this.popup.getContainer("listView").group;
+    let clickX = pointer.x - container.x - 25;
+    let tile = Math.floor(clickX / 55);
+
+    if (index + tile < this.popup.listViewItems.length) {
+        console.log(this.popup.listViewItems[background.col].getChildAt(1 + tile).cardID);
+        this.selectCard(this.popup.listViewItems[background.col].getChildAt(1 + tile).cardID);
+    }
 };
