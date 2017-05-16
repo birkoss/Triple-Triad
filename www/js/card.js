@@ -55,7 +55,7 @@ Card.prototype.configure = function(cardID) {
 
     if (card != null) {
         this.cardID = cardID;
-        if (card.sprite != null) {
+        if (card.sprite != null && card.sprite != "") {
             let unit = this.unitContainer.create(0, 0, "unit:" + card.sprite);
             unit.animations.add("idle", [0, 1], 2, true);
             unit.anchor.set(0.5, 0.5);

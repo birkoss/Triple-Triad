@@ -262,7 +262,6 @@ GAME.Game.prototype = {
                 highestStrength = cardInfo.strength;
             }
             
-            if (highestStrength 
             let g = this.game.add.group()
             let sprite = g.create(0, 0, "tile:blank");
             sprite.width = 240;
@@ -295,6 +294,9 @@ GAME.Game.prototype = {
         } else {
             /* The enemy pick a card, and it's removed from your deck */
             if (GAME.config.cards.indexOf(cardID) >= 0) {
+                for (let i=0; i<popup.listViewItems.length; i++) {
+                    popup.listViewItems[i].getChildAt(0).alpha = 0.5;
+                }
                 let qty = GAME.config.cards[cardID];
                 if (qty > 1 || GAME.config.starterDecl.indexOf(cardID)) {
                     GAME.config.cards[cardID]--;

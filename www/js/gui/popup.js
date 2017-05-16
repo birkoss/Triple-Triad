@@ -16,6 +16,9 @@ function Popup(game) {
 
     this.listView = null;
     this.listViewItems = [];
+
+    /* Create a click blocker */
+    this.getContainer("listViewClickBlocker").outside = true;
 }
 
 Popup.prototype = Object.create(Phaser.Group.prototype);
@@ -38,11 +41,6 @@ Popup.prototype.getContainer = function(containerName) {
 
         container = {group:group, name:containerName};
         this.containers.push(container);
-
-        /* Create a click blocker */
-        if (containerName == "listView") {
-            this.getContainer("listViewClickBlocker").outside = true;
-        }
     }
 
     return container;
