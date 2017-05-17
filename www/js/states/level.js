@@ -21,6 +21,9 @@ GAME.Level.prototype = {
         this.selectorContainer.addChild(this.selector);
 
         this.createPanel();
+        if (GAME.config.deck.length < 5) {
+            this.onChangeDeckClicked();
+        }
     },
 
     createLevel() {

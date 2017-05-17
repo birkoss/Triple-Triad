@@ -13,6 +13,7 @@ function Popup(game) {
     this.popupContainer.addChild(this.background);
 
     this.onPopupShown = new Phaser.Signal();
+    this.onPopupHidden = new Phaser.Signal();
 
     this.listView = null;
     this.listViewItems = [];
@@ -210,6 +211,7 @@ Popup.prototype.hide = function() {
 
     let tween = this.game.add.tween(this.popupContainer).to({y:this.popupContainer.destinationY}, Popup.SPEED);
     tween.onComplete.add(function() {
+        this.onPopupHidden.dispatch(this, 0);
         this.overlayContainer.destroy();
         this.removeAll(true);
         this.destroy();

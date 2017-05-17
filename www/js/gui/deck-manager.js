@@ -2,6 +2,8 @@ function DeckManager(game) {
     Phaser.Group.call(this, game);
 
     this.popup = null;
+
+    this.onDeckManagerHidden = new Phaser.Signal();
 }
 
 DeckManager.prototype = Object.create(Phaser.Group.prototype);
@@ -40,6 +42,7 @@ DeckManager.prototype.selectCard = function(cardID) {
 
 DeckManager.prototype.generate = function() {
     this.popup = new Popup(this.game);
+    this.popup.onPopupHidden.add(this.onPopupHidden, this);
     this.popup.maxWidth = this.game.width - 16;
     this.popup.createTitle("Your deck");
 
@@ -183,4 +186,8 @@ DeckManager.prototype.onBtnChangeDeckClicked = function() {
     GAME.config.deck = deck;
     GAME.save();
     this.popup.close();
+};
+
+DeckManager.prototype.onPopupHidden = function() {
+    this.onDeckManagerHidden.dispatch(this, 0);
 };

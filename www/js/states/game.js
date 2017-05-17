@@ -300,7 +300,7 @@ GAME.Game.prototype = {
                     }
                 }
                 let qty = GAME.config.cards[bestCard];
-                if (qty > 0 || !GAME.config.starterDeck.indexOf(bestCard)) {
+                if (qty > 0 && GAME.config.starterDeck.indexOf(bestCard) == -1) {
                     GAME.config.cards[bestCard]--;
                     /* If no more cards, remove it from the deck... */
                     if (GAME.config.cards[bestCard] <= 0) {
@@ -310,6 +310,7 @@ GAME.Game.prototype = {
                         }
                     }
                     GAME.save();
+
                 }
             }
         }
@@ -372,7 +373,15 @@ GAME.Game.prototype = {
         }
     },
     onBtnRetryClicked: function(button, pointer) {
-        this.state.restart();
+        if (GAME.config.deck.length < 5) {
+            let manager = new DeckManager(this.game);
+            manager.onDeckManagerHidden.add(function() {
+                this.state.restart();
+            }, this);
+            manager.generate();
+        } else {
+            this.state.restart();
+        }
     },
     onBtnChooseCardClicked: function(button, pointer) {
         let group = this.popup.getContainer("listView").group.getChildAt(1);
